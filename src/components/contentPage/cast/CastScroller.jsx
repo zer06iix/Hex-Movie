@@ -1,7 +1,6 @@
 import { useRef, useState, useCallback, useEffect } from 'react';
 import useMovieStore from '../../../stores/movieStore';
 import useShowStore from '../../../stores/showStore';
-import useScrollerStore from '../../../stores/scrollerStore';
 import CastItem from '../../contentPage/cast/CastItem';
 
 import NextButton from '../../buttons/NextButton';
@@ -10,14 +9,10 @@ import PreviousButton from '../../buttons/PreviousButton';
 export default function CastScroller() {
     const { movieCredits } = useMovieStore();
     const { shows, showsCredits } = useShowStore();
+
     const wrapperRef = useRef(null);
     const containerRef = useRef(null);
-    // const { 
-    //     translateX, setTranslateX,
-    //     isScrolling, setIsScrolling,
-    //     isScrollEnd, setIsScrollEnd,
-    //     isInitialLoad, setIsInitialLoad
-    // } = useScrollerStore();
+
     const [translateX, setTranslateX] = useState(0);
     const [isScrollEnd, setIsScrollEnd] = useState(true);
     const [isInitialLoad, setIsInitialLoad] = useState(true);
@@ -31,26 +26,27 @@ export default function CastScroller() {
     const scrollLeft = useCallback(() => {
         if (wrapperRef.current && !isScrolling) {
             setIsScrolling(true);
-            setTranslateX((prevTranslateX) => Math.min(0, prevTranslateX + scrollStep));
-            setTimeout(() => {
-                setIsScrolling(false);
-            }, scrollDelay);
+            setTranslateX((prev) => Math.min(0, prev + scrollStep));
+            setTimeout(() => setIsScrolling(false), scrollDelay);
         }
-    }, [scrollStep, isScrolling, scrollDelay, setIsScrolling, setTranslateX]);
+    }, [isScrolling]);
 
     const scrollRight = useCallback(() => {
         if (wrapperRef.current && containerRef.current && !isScrolling) {
             setIsScrolling(true);
             const containerWidth = containerRef.current.offsetWidth;
             const contentWidth = wrapperRef.current.offsetWidth;
-            setTranslateX((prevTranslateX) =>
-                Math.max(-(contentWidth - containerWidth), prevTranslateX - scrollStep)
+            setTranslateX((prev) =>
+                Math.max(-(contentWidth - containerWidth), prev - scrollStep)
             );
-            setTimeout(() => {
-                setIsScrolling(false);
-            }, scrollDelay);
+            setTimeout(() => setIsScrolling(false), scrollDelay);
         }
-    }, [scrollStep, isScrolling, scrollDelay, setIsScrolling, setTranslateX]);
+    }, [isScrolling]);
+
+    // Reset scroll on media change
+    useEffect(() => {
+        setTranslateX(0);
+    }, [movieCredits?.id, shows?.id]);
 
     useEffect(() => {
         if (wrapperRef.current && containerRef.current) {
@@ -59,15 +55,9 @@ export default function CastScroller() {
             const containerWidth = containerRef.current.offsetWidth;
             setIsScrollEnd(translateX <= -(contentWidth - containerWidth));
         }
-    }, [translateX, setIsInitialLoad, setIsScrollEnd]);
+    }, [translateX]);
 
-    useEffect(() => {
-        if (!isInitialLoad && wrapperRef.current && containerRef.current) {
-            const contentWidth = wrapperRef.current.offsetWidth;
-            const containerWidth = containerRef.current.offsetWidth;
-            setIsScrollEnd(translateX <= -(contentWidth - containerWidth));
-        }
-    }, [isInitialLoad, translateX, setIsScrollEnd]);
+    const castList = mediaType === 'movie' ? movieCredits?.cast : showsCredits?.cast;
 
     return (
         <div className="cast-scroller-container" ref={containerRef}>
@@ -82,6 +72,7 @@ export default function CastScroller() {
                         disabled={translateX === 0}
                     />
                 </div>
+
                 <div
                     className="cast-scroller-wrapper"
                     ref={wrapperRef}
@@ -90,22 +81,13 @@ export default function CastScroller() {
                         transition: 'transform 0.5s ease-in-out'
                     }}
                 >
-                    {mediaType == 'movie'
-                        ? movieCredits &&
-                          movieCredits.cast &&
-                          movieCredits.cast.length > 0
-                            ? movieCredits.cast.map((member) => (
-                                  <CastItem member={member} key={member.id} />
-                              ))
-                            : null
-                        : showsCredits &&
-                            showsCredits.cast &&
-                            showsCredits.cast.length > 0
-                          ? showsCredits.cast.map((member) => (
-                                <CastItem member={member} key={member.id} />
-                            ))
-                          : null}
+                    {castList?.length
+                        ? castList.map((member) => (
+                              <CastItem member={member} key={member.id} />
+                          ))
+                        : null}
                 </div>
+
                 <div
                     className="shadow-overlay shadow-overlay-end"
                     style={{

@@ -10,39 +10,26 @@ export default function CastItem({ member }) {
     const [characterTitle, setCharacterTitle] = useState('');
     const [imgError, setImgError] = useState(false);
 
-    const handleImageError = () => {
-        setImgError(true);
-    };
+    const handleImageError = () => setImgError(true);
 
+    // Show full title if text is truncated
     useEffect(() => {
-        // Check if name overflows
         if (nameRef.current) {
-            const overflow =
-                nameRef.current.scrollWidth > nameRef.current.clientWidth;
-            if (overflow) {
-                setNameTitle(member.name); // Set the full name if it overflows
-            }
+            const overflow = nameRef.current.scrollWidth > nameRef.current.clientWidth;
+            if (overflow) setNameTitle(member.name);
         }
 
-        // Check if character overflows
         if (characterRef.current) {
             const overflow =
                 characterRef.current.scrollWidth > characterRef.current.clientWidth;
-            if (overflow) {
-                setCharacterTitle(member.character || 'Unknown Character'); // Set the full character name if it overflows
-            }
+            if (overflow) setCharacterTitle(member.character || 'Unknown Character');
         }
     }, [member]);
 
     return (
-        <Link 
-            to={`/cast/${member.id}`}
-            className="cast-member"
-        >
+        <Link to={`/cast/${member.id}`} className="cast-member">
             <div className="cast-image-container">
-                {!imgError ? (
-                    <CastImage member={member} onError={handleImageError} />
-                ) : null}
+                {!imgError && <CastImage member={member} onError={handleImageError} />}
             </div>
             <div className="detail">
                 <p className="cast-name" ref={nameRef} title={nameTitle}>

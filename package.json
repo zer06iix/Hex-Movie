@@ -13,6 +13,7 @@
     "dependencies": {
         "@tanstack/react-query": "^5.59.16",
         "axios": "^1.7.7",
+        "color-thief-browser": "^2.0.2",
         "lodash": "^4.17.21",
         "lodash.debounce": "^4.0.8",
         "lodash.throttle": "^4.1.1",
@@ -21,6 +22,7 @@
         "react-lazy-load-image-component": "^1.6.3",
         "react-router-dom": "^6.26.2",
         "react-svg": "^16.2.0",
+        "string-similarity": "^4.0.4",
         "zustand": "^5.0.0"
     },
     "devDependencies": {
