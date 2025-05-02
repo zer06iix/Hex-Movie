@@ -13,23 +13,19 @@ import useShowStore from '../stores/showStore';
 import useNavigationMenuStore from '../stores/navigationMenuStore';
 
 export default function Home() {
-    const { 
-        fetchPopularMovies, 
-        fetchTrendingMovies, 
-        fetchPopularShows, 
+    const {
+        fetchPopularMovies,
+        fetchTrendingMovies,
+        fetchPopularShows,
         fetchTrendingShows,
         fetchShowsDetails // Fetch additional details for TV shows
     } = useFetchStore();
 
-    const { 
-        popularMovies, setPopularMovies, 
-        trendingMovies, setTrendingMovies
-    } = useMovieStore();
+    const { popularMovies, setPopularMovies, trendingMovies, setTrendingMovies } =
+        useMovieStore();
 
-    const { 
-        popularShows, setPopularShows, 
-        trendingShows, setTrendingShows
-    } = useShowStore();
+    const { popularShows, setPopularShows, trendingShows, setTrendingShows } =
+        useShowStore();
 
     const { selectedIndex } = useNavigationMenuStore();
 
@@ -37,42 +33,42 @@ export default function Home() {
     const upNextWrapperRef = useRef(null); // Ref for up-next section
 
     // Fetch initial data (movies and shows)
-    const { 
-        data: popularMoviesData, 
-        error: popularMoviesError, 
-        isLoading: isPopularMoviesLoading 
+    const {
+        data: popularMoviesData,
+        error: popularMoviesError,
+        isLoading: isPopularMoviesLoading
     } = useQuery({
         queryKey: ['popularMovies'],
         queryFn: () => fetchPopularMovies()
     });
 
-    const { 
-        data: trendingMoviesData, 
-        error: trendingMoviesError, 
-        isLoading: isTrendingMoviesLoading 
+    const {
+        data: trendingMoviesData,
+        error: trendingMoviesError,
+        isLoading: isTrendingMoviesLoading
     } = useQuery({
         queryKey: ['trendingMovies'],
         queryFn: () => fetchTrendingMovies()
     });
 
-    const { 
-        data: popularShowsData, 
-        error: popularShowsError, 
-        isLoading: isPopularShowsLoading 
+    const {
+        data: popularShowsData,
+        error: popularShowsError,
+        isLoading: isPopularShowsLoading
     } = useQuery({
         queryKey: ['popularShows'],
         queryFn: () => fetchPopularShows()
     });
 
-    const { 
-        data: trendingShowsData, 
-        error: trendingShowsError, 
-        isLoading: isTrendingShowsLoading 
+    const {
+        data: trendingShowsData,
+        error: trendingShowsError,
+        isLoading: isTrendingShowsLoading
     } = useQuery({
         queryKey: ['trendingShows'],
         queryFn: () => fetchTrendingShows()
     });
-    
+
     // Update stores when data changes
     useEffect(() => {
         if (popularMoviesData && popularMoviesData !== popularMovies) {
@@ -88,12 +84,18 @@ export default function Home() {
             setTrendingShows(trendingShowsData);
         }
     }, [
-        popularMoviesData, trendingMoviesData, 
-        popularShowsData, trendingShowsData, 
-        popularMovies, trendingMovies, 
-        popularShows, trendingShows,
-        setPopularMovies, setTrendingMovies, 
-        setPopularShows, setTrendingShows
+        popularMoviesData,
+        trendingMoviesData,
+        popularShowsData,
+        trendingShowsData,
+        popularMovies,
+        trendingMovies,
+        popularShows,
+        trendingShows,
+        setPopularMovies,
+        setTrendingMovies,
+        setPopularShows,
+        setTrendingShows
     ]);
 
     // Determine the current navigations based on selectedIndex
@@ -118,33 +120,41 @@ export default function Home() {
 
     // Fetch additional details for TV shows
     const tvShowIds = navigations
-    .filter(media => media.media_type === 'tv' && media.id) // Ensure ID exists
-    .map(media => media.id);
+        .filter((media) => media.media_type === 'tv' && media.id) // Ensure ID exists
+        .map((media) => media.id);
 
-    const { 
-        data: tvShowDetails, 
-        isLoading: isLoadingTvShowDetails, 
-        error: tvShowDetailsError 
+    const {
+        data: tvShowDetails,
+        isLoading: isLoadingTvShowDetails,
+        error: tvShowDetailsError
     } = useQuery({
         queryKey: ['tvShowDetails', tvShowIds.join(',')],
-        queryFn: () => Promise.all(
-            tvShowIds.map(id => fetchShowsDetails(id))
-        ),
+        queryFn: () => Promise.all(tvShowIds.map((id) => fetchShowsDetails(id))),
         enabled: tvShowIds.length > 0 // Only fetch if there are TV show IDs
     });
 
     // Merge additional details into navigations
-    const enhancedNavigations = navigations.map(media => {
+    const enhancedNavigations = navigations.map((media) => {
         if (media.media_type === 'tv') {
-            const details = tvShowDetails?.find(detail => detail.id === media.id);
+            const details = tvShowDetails?.find((detail) => detail.id === media.id);
             return { ...media, ...details }; // Merge additional details
         }
         return media; // Return unchanged for movies
     });
 
     // Combine loading and error states
-    const isLoading = isPopularMoviesLoading || isTrendingMoviesLoading || isPopularShowsLoading || isTrendingShowsLoading || isLoadingTvShowDetails;
-    const error = popularMoviesError || trendingMoviesError || popularShowsError || trendingShowsError || tvShowDetailsError;
+    const isLoading =
+        isPopularMoviesLoading ||
+        isTrendingMoviesLoading ||
+        isPopularShowsLoading ||
+        isTrendingShowsLoading ||
+        isLoadingTvShowDetails;
+    const error =
+        popularMoviesError ||
+        trendingMoviesError ||
+        popularShowsError ||
+        trendingShowsError ||
+        tvShowDetailsError;
 
     if (isLoading) {
         return <Loading />;

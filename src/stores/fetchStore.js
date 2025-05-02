@@ -3,15 +3,16 @@ import { create } from 'zustand';
 import axios from 'axios';
 import { API_KEY, BASE_URL } from '../api/tmdb';
 
-
 // Utility function to create API URLs
 const createApiUrl = (endpoint) => `${BASE_URL}${endpoint}?api_key=${API_KEY}`;
 // Utility function to create API URLs with their query
 const createApiUrlWithQueryParams = (endpoint, queryParams) => {
-    const queryString = new URLSearchParams({ api_key: API_KEY, ...queryParams }).toString();
+    const queryString = new URLSearchParams({
+        api_key: API_KEY,
+        ...queryParams
+    }).toString();
     return `${BASE_URL}${endpoint}?${queryString}`;
 };
-
 
 const useFetchStore = create((set) => ({
     fetchPopularMovies: async () => {
@@ -89,21 +90,21 @@ const useFetchStore = create((set) => ({
     },
 
     fetchSearchQueries: async (query) => {
-        const url = createApiUrlWithQueryParams(`/search/multi`, { query: query});
+        const url = createApiUrlWithQueryParams(`/search/multi`, { query: query });
         const response = await axios.get(url);
 
         return response.data.results;
     },
 
     fetchMovieQueries: async (query) => {
-        const url = createApiUrlWithQueryParams(`/search/movie`, { query: query});
+        const url = createApiUrlWithQueryParams(`/search/movie`, { query: query });
         const response = await axios.get(url);
 
         return response.data.results;
     },
 
     fetchShowsQueries: async (query) => {
-        const url = createApiUrlWithQueryParams(`/search/tv`, { query: query});
+        const url = createApiUrlWithQueryParams(`/search/tv`, { query: query });
         const response = await axios.get(url);
 
         return response.data.results;
@@ -129,13 +130,13 @@ const useFetchStore = create((set) => ({
         const url = createApiUrl('/trending/movie/week'); // This will show the trending of the week (Or can be day instead of week)
         const response = await axios.get(url);
 
-        return response.data.results; 
+        return response.data.results;
     },
     fetchTrendingShows: async () => {
         const url = createApiUrl('/trending/tv/week'); // This will show the trending of the week (Or can be day instead of week)
         const response = await axios.get(url);
-        
-        return response.data.results; 
+
+        return response.data.results;
     },
 
     fetchMovieRecommendations: async (id) => {

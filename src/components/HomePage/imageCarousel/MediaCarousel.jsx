@@ -11,6 +11,7 @@ import NextSlide from './NextSlide';
 
 import MouseDownDetector from './MouseDownDetector';
 import useCarouselStore from '../../../stores/carouselStore';
+import VoteAverage from '../imageCarousel/VoteAverage';
 
 export default function MediaCarousel({ media, wrapperRef, upNextWrapperRef }) {
     const transitionLength = 380;
@@ -22,9 +23,10 @@ export default function MediaCarousel({ media, wrapperRef, upNextWrapperRef }) {
     const prevSlideIndex = Math.max(0, (currentSlide - 1 + totalSlides) % totalSlides);
     const nextSlideIndex = Math.min(totalSlides - 1, (currentSlide + 1) % totalSlides);
 
-    // Click Cooldown
     const [carouselDisabled, setCarouselDisabled] = useState(false);
     const [upNextDisabled, setUpNextDisabled] = useState(false);
+
+    const current = media[currentSlide];
 
     const handleMouseDetectorClick = () => {
         if (currentSlideRef.current) {
@@ -33,7 +35,6 @@ export default function MediaCarousel({ media, wrapperRef, upNextWrapperRef }) {
     };
 
     const handleCarouselTransition = (direction) => {
-        // direction: 1 for next, -1 for prev
         if (carouselDisabled) return;
         setCarouselDisabled(true);
 
@@ -58,7 +59,6 @@ export default function MediaCarousel({ media, wrapperRef, upNextWrapperRef }) {
     };
 
     const handleUpNextTransition = (direction) => {
-        // direction: 1 for next, -1 for prev
         if (upNextDisabled) return;
         setUpNextDisabled(true);
 
@@ -80,33 +80,23 @@ export default function MediaCarousel({ media, wrapperRef, upNextWrapperRef }) {
                 lastChild.style.transition = `opacity ${transitionLength}ms ease`;
                 lastChild.style.opacity = '1';
                 break;
-
             case -1:
                 secondLastChild.style.transition = `opacity ${transitionLength}ms ease`;
                 secondLastChild.style.opacity = '0';
                 firstChild.style.transition = `opacity ${transitionLength}ms ease`;
                 firstChild.style.opacity = '1';
                 break;
-
-            default:
-                console.warn('Unexpected direction:', direction);
         }
 
         setTimeout(() => {
             wrapper.style.transition = 'none';
             wrapper.style.transform = 'translateY(0px)';
-
             for (let i = 0; i < wrapper.children.length; i++) {
                 wrapper.children[i].style.transition = 'none';
                 wrapper.children[i].style.opacity = '1';
             }
-
-            if (direction === 1) {
-                lastChild.style.opacity = '0';
-            }
-            if (direction === -1) {
-                firstChild.style.opacity = '0';
-            }
+            if (direction === 1) lastChild.style.opacity = '0';
+            if (direction === -1) firstChild.style.opacity = '0';
         }, transitionLength);
 
         setTimeout(() => {
@@ -135,6 +125,29 @@ export default function MediaCarousel({ media, wrapperRef, upNextWrapperRef }) {
                     <CurrentSlide slide={media[currentSlide]} ref={currentSlideRef} />
                     <NextSlide slide={media[nextSlideIndex]} />
                 </div>
+
+                {/* FIXED DETAIL OVERLAY */}
+                {current && (
+                    <div className="carousel-detail-bg fixed-carousel-detail">
+                        <div key={current.id} className="carousel-detail-content fade-in">
+                            <p className="carousel-detail-title">
+                                {current.title || current.name} (
+                                {current.release_date
+                                    ? new Date(current.release_date).getFullYear()
+                                    : current.first_air_date
+                                      ? new Date(current.first_air_date).getFullYear()
+                                      : 'N/A'}
+                                )
+                            </p>
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <VoteAverage voteAverage={current.vote_average} />
+                                <span style={{ fontSize: '0.9rem', marginTop: '4px' }}>
+                                    /10 Rating
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 <MouseDownDetector
                     onMouseUp={() => setIsDragging(false)}

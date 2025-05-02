@@ -2,7 +2,7 @@
 import Slide from '../Slide';
 
 const PreviousSlide = ({ slide }) => {
-    return <Slide slide={slide} posterDetail={true} />;
+    return <Slide slide={slide} posterDetail={true} eager={true} />;
 };
 
 export default PreviousSlide;
