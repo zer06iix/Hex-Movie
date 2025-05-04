@@ -1,37 +1,39 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 import sprite from '../../../styles/sprite.svg';
 
 export default function MediaImage({ media }) {
     const [imgError, setImgError] = useState(false);
 
+    const imagePath = media?.poster_path || media?.backdrop_path;
+    const imageUrl = imagePath ? `https://image.tmdb.org/t/p/w185${imagePath}` : null;
+
     const handleImageError = () => {
         setImgError(true);
     };
 
+    if (imgError || !imageUrl) {
+        return (
+            <div className="media-image-placeholder">
+                <svg className="placeholder-icon">
+                    <use xlinkHref={`${sprite}#image-placeholder`} />
+                </svg>
+                <p className="placeholder-text">Not available</p>
+            </div>
+        );
+    }
+
     return (
-        <>
-            {!imgError ? (
-                <img
-                    src={
-                        media.poster_path
-                            ? `https://image.tmdb.org/t/p/w500${media.poster_path}`
-                            : 'placeholder_image_url'
-                    }
-                    title={media.name}
-                    alt={media.name}
-                    className="media-item-image"
-                    onError={handleImageError}
-                />
-            ) : (
-                <div>
-                    {/* <div className="cast-image-placeholder">
-                    <svg className="placeholder-icon">
-                        <use xlinkHref={`${sprite}#image-placeholder`} />
-                    </svg>
-                    <p className="placeholder-text">Not available</p> */}
-                </div>
-            )}
-        </>
+        <LazyLoadImage
+            alt={media.title || media.name}
+            title={media.title || media.name}
+            src={imageUrl}
+            effect="blur"
+            onError={handleImageError}
+            className="media-item-image"
+            wrapperClassName="media-image-wrapper"
+        />
     );
 }

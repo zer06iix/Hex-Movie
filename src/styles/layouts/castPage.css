@@ -253,7 +253,6 @@
     overflow: hidden;
     white-space: nowrap;
     transition: transform 0.15s ease;
-    -ms-overflow-style: none;
     scrollbar-width: none;
     width: 100%;
     height: 100%;
@@ -308,9 +307,12 @@
     will-change: transform;
 }
 
-.media-item-image {
-    width: 100%;
+.media-image-wrapper {
     height: 100%;
+    width: 100%;
+}
+
+.media-item-image {
     object-fit: cover;
 }
 
