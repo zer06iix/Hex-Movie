@@ -32,7 +32,6 @@ const MediaPoster = ({ imagePath, mediaTitle }) => {
         }, 300);
     };
 
-    // Hide overlay when modal is about to open
     useEffect(() => {
         if (renderModal) {
             setShowOverlay(false);
@@ -45,9 +44,13 @@ const MediaPoster = ({ imagePath, mediaTitle }) => {
         };
     }, [renderModal]);
 
+    const finalImagePath = imagePath
+        ? `https://image.tmdb.org/t/p/w500${imagePath}`
+        : 'path_to_placeholder_image'; // Fallback image URL
+
     return (
         <div className="reusable-poster-container">
-            {imagePath ? (
+            {finalImagePath ? (
                 <div
                     ref={posterWrapperRef}
                     className="reusable-poster-wrapper"
@@ -57,7 +60,7 @@ const MediaPoster = ({ imagePath, mediaTitle }) => {
                 >
                     <img
                         className="reusable-poster-image"
-                        src={imagePath}
+                        src={finalImagePath}
                         alt={mediaTitle}
                     />
                     <div
@@ -77,23 +80,15 @@ const MediaPoster = ({ imagePath, mediaTitle }) => {
                 </div>
             )}
 
-            {renderModal && ( // Conditionally render the modal container
+            {renderModal && (
                 <div
                     className={`reusable-fullscreen-modal ${isModalOpen ? 'active' : ''}`}
                     onClick={handleCloseModal}
                 >
                     <div className="reusable-modal-content">
-                        {/* <button
-                            className="reusable-modal-close-button"
-                            onClick={handleCloseModal}
-                        >
-                            <svg className="reusable-icon-close">
-                                <use xlinkHref={`${sprite}#close`} />
-                            </svg>
-                        </button> */}
                         <img
                             className="reusable-modal-image"
-                            src={imagePath}
+                            src={finalImagePath}
                             alt={mediaTitle}
                         />
                     </div>

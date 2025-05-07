@@ -200,8 +200,4 @@ export default function CastPage() {
     );
 }
 
-CastPage.propTypes = {
-    castId: PropTypes.string.isRequired
-};
-
 CastPage.displayName = 'CastMemberDetailsHeader';

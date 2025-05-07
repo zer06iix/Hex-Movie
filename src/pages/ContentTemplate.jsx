@@ -59,10 +59,10 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
               : 'media-title--small';
     };
 
-    const imagePath =
-        media.poster_path || media.profile_path
-            ? `https://image.tmdb.org/t/p/w500${media.poster_path || media.profile_path}`
-            : null;
+    const imagePath = media.poster_path || media.profile_path
+        ? `https://image.tmdb.org/t/p/w500${media.poster_path || media.profile_path}`
+        : 'path_to_placeholder_image'; // Fallback image
+
 
     return (
         <div className="content-container">

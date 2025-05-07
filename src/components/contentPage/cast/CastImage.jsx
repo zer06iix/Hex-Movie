@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { useState } from 'react';
 import sprite from '../../../styles/sprite.svg';
 
@@ -9,15 +8,15 @@ export default function CastImage({ member }) {
         setImgError(true);
     };
 
+    const finalImagePath = member.profile_path
+        ? `https://image.tmdb.org/t/p/w500${member.profile_path}`
+        : 'path_to_placeholder_image'; // Fallback image URL
+
     return (
         <>
             {!imgError ? (
                 <img
-                    src={
-                        member.profile_path
-                            ? `https://image.tmdb.org/t/p/w500${member.profile_path}`
-                            : 'placeholder_image_url'
-                    }
+                    src={finalImagePath}
                     title={member.name}
                     alt={member.name}
                     className="cast-image"
