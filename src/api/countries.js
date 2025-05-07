@@ -114,11 +114,11 @@ const countryNames = {
     KZ: 'Kazakhstan',
     KE: 'Kenya',
     KI: 'Kiribati',
-    KP: 'Korea, Democratic People\'s Republic of',
+    KP: "Korea, Democratic People's Republic of",
     KR: 'Korea, Republic of',
     KW: 'Kuwait',
     KG: 'Kyrgyzstan',
-    LA: 'Lao People\'s Democratic Republic',
+    LA: "Lao People's Democratic Republic",
     LV: 'Latvia',
     LB: 'Lebanon',
     LS: 'Lesotho',
@@ -239,7 +239,7 @@ const countryNames = {
     EH: 'Western Sahara',
     YE: 'Yemen',
     ZM: 'Zambia',
-    ZW: 'Zimbabwe',
+    ZW: 'Zimbabwe'
 };
 
 export { countryNames };

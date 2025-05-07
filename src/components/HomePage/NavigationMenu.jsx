@@ -6,7 +6,6 @@ import useNavigationMenuStore from '../../stores/navigationMenuStore';
 export default function NavigationMenu() {
     const { selectedIndex, setSelectedIndex } = useNavigationMenuStore();
 
-    // const [selectedIndex, setSelectedIndex] = useState(0);
     const buttonRefs = useRef([]);
     const setButtonRef = useCallback((el, index) => {
         buttonRefs.current[index] = el;
@@ -40,7 +39,7 @@ export default function NavigationMenu() {
                 <div className="indicator-line">
                     <div
                         className="indicator"
-                        style={{ top: `${selectedIndex * 48}px` }}
+                        style={{ top: `${selectedIndex * 47.5}px` }}
                     ></div>
                 </div>
                 {[
@@ -48,8 +47,7 @@ export default function NavigationMenu() {
                     'Trending Shows',
                     'Popular Movies',
                     'Popular Shows',
-                    'New Releases (Not Ready Yet)',
-                    'Coming Soon (Not Ready Yet)'
+                    'Upcoming Releases'
                 ].map((item, index) => (
                     <button
                         className={`navigation-button`}

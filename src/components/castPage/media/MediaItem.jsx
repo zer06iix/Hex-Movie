@@ -34,14 +34,14 @@ export default function MediaItem({ media }) {
         }
     }, [media]);
 
-    switch(media.media_type) {
+    switch (media.media_type) {
         case 'tv':
             mediaType = 'shows';
-            break
+            break;
         case 'movie':
             mediaType = 'movie';
-            break
-        default: 
+            break;
+        default:
             mediaType = '';
     }
 

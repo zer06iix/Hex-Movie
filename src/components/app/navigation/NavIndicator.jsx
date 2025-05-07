@@ -14,9 +14,7 @@ export default function NavIndicator({ width }) {
 
     const indicatorOffset = -20;
     const tabWidth = tabWidths[i] || 0;
-    const tabWidthOffset = tabWidths
-        .slice(0, i)
-        .reduce((acc, width) => acc + width, 0);
+    const tabWidthOffset = tabWidths.slice(0, i).reduce((acc, width) => acc + width, 0);
 
     return (
         <div

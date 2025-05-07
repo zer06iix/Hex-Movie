@@ -11,12 +11,7 @@ const MenuButton = forwardRef(({ style, onClick }, ref) => {
     };
 
     return (
-        <button
-            ref={ref}
-            onClick={handleClick}
-            className="menu-button"
-            style={style}
-        >
+        <button ref={ref} onClick={handleClick} className="menu-button" style={style}>
             <svg
                 viewBox="0 0 20 20"
                 xmlns="http://www.w3.org/2000/svg"

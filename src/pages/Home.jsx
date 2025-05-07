@@ -18,7 +18,9 @@ export default function Home() {
         fetchTrendingMovies,
         fetchPopularShows,
         fetchTrendingShows,
-        fetchShowsDetails // Fetch additional details for TV shows
+        fetchUpcomingMovies, // Add fetchUpcomingMovies
+        fetchUpcomingShows, // Add fetchUpcomingShows
+        fetchShowsDetails
     } = useFetchStore();
 
     const { popularMovies, setPopularMovies, trendingMovies, setTrendingMovies } =
@@ -29,10 +31,9 @@ export default function Home() {
 
     const { selectedIndex } = useNavigationMenuStore();
 
-    const carouselWrapperRef = useRef(null); // Ref for carousel wrapper
-    const upNextWrapperRef = useRef(null); // Ref for up-next section
+    const carouselWrapperRef = useRef(null);
+    const upNextWrapperRef = useRef(null);
 
-    // Fetch initial data (movies and shows)
     const {
         data: popularMoviesData,
         error: popularMoviesError,
@@ -67,6 +68,25 @@ export default function Home() {
     } = useQuery({
         queryKey: ['trendingShows'],
         queryFn: () => fetchTrendingShows()
+    });
+
+    // Fetch upcoming releases
+    const {
+        data: upcomingMoviesData,
+        error: upcomingMoviesError,
+        isLoading: isUpcomingMoviesLoading
+    } = useQuery({
+        queryKey: ['upcomingMovies'],
+        queryFn: () => fetchUpcomingMovies()
+    });
+
+    const {
+        data: upcomingShowsData,
+        error: upcomingShowsError,
+        isLoading: isUpcomingShowsLoading
+    } = useQuery({
+        queryKey: ['upcomingShows'],
+        queryFn: () => fetchUpcomingShows()
     });
 
     // Update stores when data changes
@@ -113,6 +133,12 @@ export default function Home() {
         case 3:
             navigations = popularShows;
             break;
+        case 4:
+            navigations = upcomingMoviesData; // For upcoming movies
+            break;
+        case 5:
+            navigations = upcomingShowsData; // For upcoming shows
+            break;
         default:
             navigations = [];
             break;
@@ -148,12 +174,16 @@ export default function Home() {
         isTrendingMoviesLoading ||
         isPopularShowsLoading ||
         isTrendingShowsLoading ||
+        isUpcomingMoviesLoading ||
+        isUpcomingShowsLoading ||
         isLoadingTvShowDetails;
     const error =
         popularMoviesError ||
         trendingMoviesError ||
         popularShowsError ||
         trendingShowsError ||
+        upcomingMoviesError ||
+        upcomingShowsError ||
         tvShowDetailsError;
 
     if (isLoading) {
@@ -178,6 +208,7 @@ export default function Home() {
                 media={enhancedNavigations}
                 wrapperRef={carouselWrapperRef}
                 upNextWrapperRef={upNextWrapperRef}
+                selectedIndex={selectedIndex}
             />
             <UpNextSection media={enhancedNavigations} wrapperRef={upNextWrapperRef} />
         </>

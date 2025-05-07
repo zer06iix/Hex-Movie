@@ -13,11 +13,12 @@ import MouseDownDetector from './MouseDownDetector';
 import useCarouselStore from '../../../stores/carouselStore';
 import VoteAverage from '../imageCarousel/VoteAverage';
 
-export default function MediaCarousel({ media, wrapperRef, upNextWrapperRef }) {
+export default function MediaCarousel({ media, wrapperRef, upNextWrapperRef, selectedIndex }) {
     const transitionLength = 380;
     const currentSlideRef = useRef(null);
     const { prevSlide, currentSlide, nextSlide } = useCarouselStore();
     const [isDragging, setIsDragging] = useState(false);
+    const [displayedMedia, setDisplayedMedia] = useState(null);
 
     const totalSlides = media.length;
     const prevSlideIndex = Math.max(0, (currentSlide - 1 + totalSlides) % totalSlides);
@@ -26,7 +27,9 @@ export default function MediaCarousel({ media, wrapperRef, upNextWrapperRef }) {
     const [carouselDisabled, setCarouselDisabled] = useState(false);
     const [upNextDisabled, setUpNextDisabled] = useState(false);
 
-    const current = media[currentSlide];
+    useEffect(() => {
+        setDisplayedMedia(media[selectedIndex]);
+    }, [selectedIndex, media]);
 
     const handleMouseDetectorClick = () => {
         if (currentSlideRef.current) {
@@ -34,9 +37,23 @@ export default function MediaCarousel({ media, wrapperRef, upNextWrapperRef }) {
         }
     };
 
+    // Update the carousel detail instantly before the transition
+    const updateCarouselDetail = (direction) => {
+        const newIndex = direction === 1 
+            ? (currentSlide + 1) % totalSlides 
+            : (currentSlide - 1 + totalSlides) % totalSlides;
+        
+        const newSlide = media[newIndex];
+        setDisplayedMedia(newSlide);
+    };
+
+    // Handle carousel transition (Next/Previous buttons)
     const handleCarouselTransition = (direction) => {
         if (carouselDisabled) return;
         setCarouselDisabled(true);
+
+        // Update carousel detail instantly before transition
+        updateCarouselDetail(direction);
 
         const wrapper = wrapperRef.current;
         wrapper.style.transition = `transform ${transitionLength}ms ease`;
@@ -58,6 +75,7 @@ export default function MediaCarousel({ media, wrapperRef, upNextWrapperRef }) {
         }, transitionLength + 20);
     };
 
+    // Handle UpNext section transition (up and down)
     const handleUpNextTransition = (direction) => {
         if (upNextDisabled) return;
         setUpNextDisabled(true);
@@ -71,7 +89,7 @@ export default function MediaCarousel({ media, wrapperRef, upNextWrapperRef }) {
         const lastChild = wrapper.children[wrapper.children.length - 1];
 
         wrapper.style.transition = `transform ${transitionLength}ms ease`;
-        wrapper.style.transform = `translateY(${-direction * 120}px)`;
+        wrapper.style.transform = `translateY(${-direction * 120}px)`; // Up and down movement
 
         switch (direction) {
             case 1:
@@ -119,28 +137,26 @@ export default function MediaCarousel({ media, wrapperRef, upNextWrapperRef }) {
                     }}
                     disabled={carouselDisabled}
                 />
-
                 <div className="carousel-wrapper" ref={wrapperRef}>
                     <PreviousSlide slide={media[prevSlideIndex]} />
                     <CurrentSlide slide={media[currentSlide]} ref={currentSlideRef} />
                     <NextSlide slide={media[nextSlideIndex]} />
                 </div>
 
-                {/* FIXED DETAIL OVERLAY */}
-                {current && (
+                {displayedMedia && (
                     <div className="carousel-detail-bg fixed-carousel-detail">
-                        <div key={current.id} className="carousel-detail-content fade-in">
+                        <div key={displayedMedia.id} className="carousel-detail-content fade-in">
                             <p className="carousel-detail-title">
-                                {current.title || current.name} (
-                                {current.release_date
-                                    ? new Date(current.release_date).getFullYear()
-                                    : current.first_air_date
-                                      ? new Date(current.first_air_date).getFullYear()
+                                {displayedMedia.title || displayedMedia.name} (
+                                {displayedMedia.release_date
+                                    ? new Date(displayedMedia.release_date).getFullYear()
+                                    : displayedMedia.first_air_date
+                                      ? new Date(displayedMedia.first_air_date).getFullYear()
                                       : 'N/A'}
                                 )
                             </p>
                             <div style={{ display: 'flex', alignItems: 'center' }}>
-                                <VoteAverage voteAverage={current.vote_average} />
+                                <VoteAverage voteAverage={displayedMedia.vote_average} />
                                 <span style={{ fontSize: '0.9rem', marginTop: '4px' }}>
                                     /10 Rating
                                 </span>
@@ -180,5 +196,6 @@ export default function MediaCarousel({ media, wrapperRef, upNextWrapperRef }) {
 MediaCarousel.propTypes = {
     media: PropTypes.arrayOf(PropTypes.object).isRequired,
     wrapperRef: PropTypes.object.isRequired,
-    upNextWrapperRef: PropTypes.object.isRequired
+    upNextWrapperRef: PropTypes.object.isRequired,
+    selectedIndex: PropTypes.number.isRequired,
 };

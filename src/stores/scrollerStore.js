@@ -1,10 +1,10 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
 const useScrollerStore = create((set) => ({
     // scrollStep: 600,
     // scrollDelay: 500,
 
-    translateX: 0, 
+    translateX: 0,
     setTranslateX: (newTranslateX) => set({ translateX: newTranslateX }),
 
     isScrolling: false,

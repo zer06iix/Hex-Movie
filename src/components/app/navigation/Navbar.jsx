@@ -77,10 +77,7 @@ export default function Navbar() {
                             Most Rated
                         </NavTab>
 
-                        <NavTab
-                            path="/watchlist"
-                            onTabWidthChange={handleTabWidthChange}
-                        >
+                        <NavTab path="/watchlist" onTabWidthChange={handleTabWidthChange}>
                             Watch list
                         </NavTab>
                     </div>

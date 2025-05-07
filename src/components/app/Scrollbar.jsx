@@ -80,17 +80,11 @@ function CustomScrollbar({
             if (x) {
                 const mouseX = e.clientX - trackRect.left;
                 const maxPosition = trackRect.width - thumbLength;
-                newPosition = Math.min(
-                    Math.max(0, mouseX - dragOffset),
-                    maxPosition
-                );
+                newPosition = Math.min(Math.max(0, mouseX - dragOffset), maxPosition);
             } else if (y) {
                 const mouseY = e.clientY - trackRect.top;
                 const maxPosition = trackRect.height - thumbLength;
-                newPosition = Math.min(
-                    Math.max(0, mouseY - dragOffset),
-                    maxPosition
-                );
+                newPosition = Math.min(Math.max(0, mouseY - dragOffset), maxPosition);
             }
             if (newPosition !== undefined) {
                 setThumbPosition(newPosition);
@@ -199,14 +193,12 @@ function CustomScrollbar({
                 const scrollableHeight = contentHeight - viewportSize.height;
                 const maxThumbPosition = trackRect.height - thumbLength;
 
-                newScrollPosition =
-                    scrollableHeight * (thumbPosition / maxThumbPosition);
+                newScrollPosition = scrollableHeight * (thumbPosition / maxThumbPosition);
             } else if (x) {
                 const scrollableWidth = contentWidth - viewportWidth;
                 const maxThumbPosition = trackRect.width - thumbLength;
 
-                newScrollPosition =
-                    scrollableWidth * (thumbPosition / maxThumbPosition);
+                newScrollPosition = scrollableWidth * (thumbPosition / maxThumbPosition);
             }
             if (newScrollPosition !== undefined) {
                 setScrollPosition(newScrollPosition);
@@ -345,9 +337,7 @@ function CustomScrollbar({
             >
                 {y && (
                     <>
-                        {scrollConfig.enableArrowBtns
-                            ? renderArrows('vertical')
-                            : null}
+                        {scrollConfig.enableArrowBtns ? renderArrows('vertical') : null}
                         <div
                             ref={thumbRef}
                             onMouseDown={handleMouseDown}
@@ -359,9 +349,7 @@ function CustomScrollbar({
 
                 {x && (
                     <>
-                        {scrollConfig.enableArrowBtns
-                            ? renderArrows('horizontal')
-                            : null}
+                        {scrollConfig.enableArrowBtns ? renderArrows('horizontal') : null}
                         <div
                             ref={thumbRef}
                             onMouseDown={handleMouseDown}

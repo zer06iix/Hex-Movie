@@ -14,10 +14,10 @@ export default function MoviePage() {
     const { fetchMovieDetails, fetchMovieCredits, fetchGenres } = useFetchStore();
 
     // Fetch movie details
-    const { 
-        data: movieData, 
-        error: movieError, 
-        isLoading: movieLoading 
+    const {
+        data: movieData,
+        error: movieError,
+        isLoading: movieLoading
     } = useQuery({
         queryKey: ['movie', movieId],
         queryFn: () => fetchMovieDetails(movieId),
@@ -25,10 +25,10 @@ export default function MoviePage() {
     });
 
     // Fetch movie credits
-    const { 
-        data: movieCreditsData, 
-        error: movieCreditsError, 
-        isLoading: movieCreditsLoading 
+    const {
+        data: movieCreditsData,
+        error: movieCreditsError,
+        isLoading: movieCreditsLoading
     } = useQuery({
         queryKey: ['movieCredits', movieId],
         queryFn: () => fetchMovieCredits(movieId),

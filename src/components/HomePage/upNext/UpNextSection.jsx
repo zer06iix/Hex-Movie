@@ -53,10 +53,7 @@ export default function UpNextSection({ media, wrapperRef }) {
     return (
         <div className="up-next-container">
             <p className="up-next-title">Up Next</p>
-            <div
-                className="up-next-mask"
-                style={{ height: `${itemsToLoad * 120}px` }}
-            >
+            <div className="up-next-mask" style={{ height: `${itemsToLoad * 120}px` }}>
                 <div className="up-next-wrapper" ref={wrapperRef}>
                     {genresLoading ? (
                         <p>Loading genres...</p>
@@ -67,8 +64,7 @@ export default function UpNextSection({ media, wrapperRef }) {
                                 (movieIndex + media.length) % media.length;
                             const movie = media[adjustedIndex];
                             if (!movie) return null;
-                            const translateY =
-                                ((itemsToLoad + 1) / 2 - i) * -100 - 50;
+                            const translateY = ((itemsToLoad + 1) / 2 - i) * -100 - 50;
                             return (
                                 <UpNextItem
                                     key={i}

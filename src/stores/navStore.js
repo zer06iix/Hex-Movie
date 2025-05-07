@@ -21,8 +21,7 @@ const useNavStore = create((set) => {
             sessionStorage.setItem('activeTab', tab);
             sessionStorage.setItem('activeTabIndex', newActiveTabIndex);
         },
-        toggleSidebar: () =>
-            set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
+        toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
 
         updateTabWidth: (index, width) =>
             set((state) => {
@@ -39,7 +38,10 @@ const useNavStore = create((set) => {
                 '/watchlist': { tab: 'Watch list', index: 2 }
             };
 
-            const { tab: newActiveTab, index: newActiveTabIndex } = tabMapping[path] || { tab: null, index: -1 };
+            const { tab: newActiveTab, index: newActiveTabIndex } = tabMapping[path] || {
+                tab: null,
+                index: -1
+            };
 
             set({ activeTab: newActiveTab, activeTabIndex: newActiveTabIndex });
             sessionStorage.setItem('activeTab', newActiveTab);
