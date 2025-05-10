@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import sprite from '../../styles/sprite.svg';
 import useMovieStore from '../../stores/movieStore';
 import { countryNames } from '../../api/countries';
+import Tooltip from '../../components/app/Tooltip';
 
 const MovieMetadata = ({
     releaseDate,
@@ -11,17 +12,26 @@ const MovieMetadata = ({
     formattedRuntime
 }) => {
     const { movie } = useMovieStore();
+    const parsedReleaseDate = new Date(releaseDate);
+    const tooltipReleaseDate = [
+        parsedReleaseDate.getDate(),
+        parsedReleaseDate.getMonth() + 1,
+        parsedReleaseDate.getFullYear()
+    ].join('/');
+    const releaseYear = parsedReleaseDate.getFullYear();
 
     return (
         <p className="metadata">
-            <span title={new Date(releaseDate).toLocaleDateString('en-GB')}>
-                {releaseDate.slice(0, 4)}
-                <sup>
-                    <svg className="metadata-icon">
-                        <use xlinkHref={`${sprite}#help`} />
-                    </svg>
-                </sup>
-            </span>
+            <Tooltip content={tooltipReleaseDate} placement="auto">
+                <span>
+                    {releaseYear}
+                    <sup>
+                        <svg className="metadata-icon">
+                            <use xlinkHref={`${sprite}#help`} />
+                        </svg>
+                    </sup>
+                </span>
+            </Tooltip>
 
             {formattedRuntime !== null && (
                 <>
@@ -34,10 +44,12 @@ const MovieMetadata = ({
                 <span className="separator">•</span>
                 {Array.isArray(movie.origin_country) ? (
                     movie.origin_country.map((country, index) => (
-                        <span key={country} title={countryNames[country]}>
-                            {country}
-                            {index < movie.origin_country.length - 1 ? ', ' : ''}
-                        </span>
+                        <Tooltip key={country} content={countryNames[country]}>
+                            <span>
+                                {country}
+                                {index < movie.origin_country.length - 1 ? ', ' : ''}
+                            </span>
+                        </Tooltip>
                     ))
                 ) : (
                     <span title={countryNames[movie.origin_country]}>
@@ -54,14 +66,16 @@ const MovieMetadata = ({
             {adult !== undefined && (
                 <>
                     <span className="separator">•</span>
-                    <span title={ratingTitle}>
-                        {formattedRating}
-                        <sup>
-                            <svg className="metadata-icon">
-                                <use xlinkHref={`${sprite}#help`} />
-                            </svg>
-                        </sup>
-                    </span>
+                    <Tooltip content={ratingTitle}>
+                        <span>
+                            {formattedRating}
+                            <sup>
+                                <svg className="metadata-icon">
+                                    <use xlinkHref={`${sprite}#help`} />
+                                </svg>
+                            </sup>
+                        </span>
+                    </Tooltip>
                 </>
             )}
         </p>

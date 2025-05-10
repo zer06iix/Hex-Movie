@@ -1,0 +1,70 @@
+.tooltip-trigger {
+    position: relative;
+    display: inline-block;
+    cursor: default;
+}
+
+.tooltip-box {
+    position: absolute;
+    max-width: 240px;
+    padding: 8px 12px;
+    background: rgba(13, 17, 24, 0.4);
+    backdrop-filter: blur(10px);
+    color: #c4c1c6;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    pointer-events: none;
+    z-index: 10000;
+    font-family: 'Montserrat', sans-serif;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 1px 1px 7px rgba(13, 17, 24, 0.7);
+    border: 1px solid rgba(196, 193, 198, 0.15);
+    transform: translateX(-50%);
+    opacity: 0;
+    transition:
+        opacity 0.15s ease,
+        transform 0.15s ease;
+}
+
+.tooltip-top {
+    transform: translateX(-50%) translateY(-100%);
+}
+
+.tooltip-bottom {
+    transform: translateX(-50%) translateY(0);
+}
+
+.tooltip-arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+}
+
+.tooltip-top .tooltip-arrow {
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-top: 5px solid rgba(13, 17, 24, 0.9);
+}
+
+.tooltip-bottom .tooltip-arrow {
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%) rotate(180deg);
+    border-top: 5px solid rgba(13, 17, 24, 0.9);
+}
+
+.tooltip-enter {
+    opacity: 1;
+    transform: translateX(-50%) translateY(4px);
+}
+
+.tooltip-exit {
+    opacity: 0;
+    transform: translateX(-50%) translateY(0);
+}
