@@ -42,23 +42,26 @@ export default function Tooltip({
             const tip = tooltipRef.current.getBoundingClientRect();
 
             let final = placement;
-            if (placement === 'auto') {
-                const above = trig.top;
-                const below = vh - trig.bottom;
-                final =
-                    below >= tip.height + offset
-                        ? 'bottom'
-                        : above >= tip.height + offset
-                          ? 'top'
-                          : below >= above
-                            ? 'bottom'
-                            : 'top';
+            if (placement === 'auto' || placement === 'bottom' || placement === 'top') {
+                const topAvailable = trig.top >= tip.height + offset;
+                const bottomAvailable = vh - trig.bottom >= tip.height + offset;
+
+                if (placement === 'auto') {
+                    final = bottomAvailable ? 'bottom' : topAvailable ? 'top' : 'bottom';
+                } else if (placement === 'bottom' && !bottomAvailable) {
+                    final = topAvailable ? 'top' : 'bottom';
+                } else if (placement === 'top' && !topAvailable) {
+                    final = bottomAvailable ? 'bottom' : 'top';
+                }
             }
+
+            const baseOffset = offset;
+            const adjustedOffset = final === 'top' ? baseOffset + 10 : baseOffset;
 
             const top =
                 final === 'top'
-                    ? trig.top + window.scrollY - tip.height - offset
-                    : trig.bottom + window.scrollY + offset;
+                    ? trig.top + window.scrollY - tip.height - adjustedOffset
+                    : trig.bottom + window.scrollY + adjustedOffset;
 
             let left = trig.left + window.scrollX + trig.width / 2;
             const half = tip.width / 2;

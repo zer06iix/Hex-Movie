@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import sprite from '../../styles/sprite.svg';
 import useShowStore from '../../stores/showStore';
 import { countryNames } from '../../api/countries';
+import Tooltip from '../../components/app/Tooltip';
 
 const ShowsMeta = ({
     showFormattedDate,
@@ -29,15 +30,17 @@ const ShowsMeta = ({
                 <span className="separator">•</span>
                 {Array.isArray(shows.origin_country) ? (
                     shows.origin_country.map((country, index) => (
-                        <span key={country} title={countryNames[country]}>
-                            {country}
-                            {index < shows.origin_country.length - 1 ? ', ' : ''}
-                        </span>
+                        <Tooltip key={country} content={countryNames[country]}>
+                            <span>
+                                {country}
+                                {index < shows.origin_country.length - 1 ? ', ' : ''}
+                            </span>
+                        </Tooltip>
                     ))
                 ) : (
-                    <span title={countryNames[shows.origin_country]}>
-                        {shows.origin_country}
-                    </span>
+                    <Tooltip content={countryNames[shows.origin_country]}>
+                        <span>{shows.origin_country}</span>
+                    </Tooltip>
                 )}
                 <sup>
                     <svg className="metadata-icon">
@@ -49,14 +52,16 @@ const ShowsMeta = ({
             {adult !== undefined && (
                 <>
                     <span className="separator">•</span>
-                    <span title={ratingTitle}>
-                        {formattedRating}
-                        <sup>
-                            <svg className="metadata-icon">
-                                <use xlinkHref={`${sprite}#help`} />
-                            </svg>
-                        </sup>
-                    </span>
+                    <Tooltip content={ratingTitle}>
+                        <span>
+                            {formattedRating}
+                            <sup>
+                                <svg className="metadata-icon">
+                                    <use xlinkHref={`${sprite}#help`} />
+                                </svg>
+                            </sup>
+                        </span>
+                    </Tooltip>
                 </>
             )}
         </p>

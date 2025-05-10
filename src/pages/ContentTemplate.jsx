@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import { useState } from 'react';
 import Loading from '../components/app/Loading';
 import CastScroller from '../components/contentPage/cast/CastScroller';
 import MediaExpandable from '../components/contentPage/MediaExpandable';
@@ -11,26 +10,43 @@ import MediaGenre from '../components/contentPage/MediaGenre';
 import MediaRating from '../components/contentPage/MediaRating';
 import MediaPoster from '../components/contentPage/MediaPoster';
 import sprite from '../styles/sprite.svg';
+import Tooltip from '../components/app/Tooltip';
 import { ReactSVG } from 'react-svg';
 
 const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
     const isMovie = type === 'Movie';
     const mediaTitle = isMovie ? media.title : media.name;
 
+    const parsedFirstAirDate = new Date(media.first_air_date);
+    const tooltipFirstAirDate = [
+        parsedFirstAirDate.getDate(),
+        parsedFirstAirDate.getMonth() + 1,
+        parsedFirstAirDate.getFullYear()
+    ].join('/');
+    const firstAirYear = parsedFirstAirDate.getFullYear();
+
+    const parsedLastAirDate = new Date(media.last_air_date);
+    const tooltipLastAirDate = [
+        parsedLastAirDate.getDate(),
+        parsedLastAirDate.getMonth() + 1,
+        parsedLastAirDate.getFullYear()
+    ].join('/');
+    const lastAirYear = parsedLastAirDate.getFullYear();
+
     const showFormattedDate = !isMovie ? (
         media.in_production ? (
-            <span title={new Date(media.first_air_date).toLocaleDateString('en-GB')}>
-                Since {media.first_air_date.slice(0, 4)}
-            </span>
+            <Tooltip content={tooltipFirstAirDate}>
+                <span>Since {firstAirYear}</span>
+            </Tooltip>
         ) : (
             <>
-                <span title={new Date(media.first_air_date).toLocaleDateString('en-GB')}>
-                    {media.first_air_date.slice(0, 4)}
-                </span>
+                <Tooltip content={tooltipFirstAirDate}>
+                    <span>{firstAirYear}</span>
+                </Tooltip>
                 {' - '}
-                <span title={new Date(media.last_air_date).toLocaleDateString('en-GB')}>
-                    {media.last_air_date.slice(0, 4)}
-                </span>
+                <Tooltip content={tooltipLastAirDate}>
+                    <span>{lastAirYear}</span>
+                </Tooltip>
             </>
         )
     ) : null;
@@ -39,8 +55,8 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
 
     const formattedRating = media.adult ? 'Rated R' : 'Rated PG';
     const ratingTitle = media.adult
-        ? `R-rated movies are for adults, containing \nstrong language, sexual content, violence, \nor drug use. Viewer discretion is advised.`
-        : `PG-rated movies are suitable for general \naudiences but may have material that requires \nparental guidance for younger children.`;
+        ? `R-rated movies are for adults, containing strong language, sexual content, violence, or drug use. Viewer discretion is advised.`
+        : `PG-rated movies are suitable for general audiences but may have material that requires parental guidance for younger children.`;
 
     const formatRuntime = (runtime) =>
         !runtime
@@ -59,10 +75,10 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
               : 'media-title--small';
     };
 
-    const imagePath = media.poster_path || media.profile_path
-        ? `https://image.tmdb.org/t/p/w500${media.poster_path || media.profile_path}`
-        : 'path_to_placeholder_image'; // Fallback image
-
+    const imagePath =
+        media.poster_path || media.profile_path
+            ? `https://image.tmdb.org/t/p/w500${media.poster_path || media.profile_path}`
+            : 'path_to_placeholder_image'; // Fallback image
 
     return (
         <div className="content-container">
