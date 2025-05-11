@@ -15,13 +15,13 @@ export default function CastScroller() {
 
     const [translateX, setTranslateX] = useState(0);
     const [isScrollEnd, setIsScrollEnd] = useState(true);
-    const [isInitialLoad, setIsInitialLoad] = useState(true);
     const [isScrolling, setIsScrolling] = useState(false);
 
     const mediaType = shows?.name ? 'shows' : 'movie';
 
     const scrollStep = 600;
     const scrollDelay = 500;
+    const scrollThreshold = 10;
 
     const scrollLeft = useCallback(() => {
         if (wrapperRef.current && !isScrolling) {
@@ -43,33 +43,66 @@ export default function CastScroller() {
         }
     }, [isScrolling]);
 
-    // Reset scroll on media change
+    // Reset scroll position on media change
     useEffect(() => {
         setTranslateX(0);
     }, [movieCredits?.id, shows?.id]);
 
+    // Recalculate scroll end when translateX changes
     useEffect(() => {
         if (wrapperRef.current && containerRef.current) {
-            setIsInitialLoad(false);
             const contentWidth = wrapperRef.current.offsetWidth;
             const containerWidth = containerRef.current.offsetWidth;
-            setIsScrollEnd(translateX <= -(contentWidth - containerWidth));
+            setIsScrollEnd(
+                translateX <= -(contentWidth - containerWidth - scrollThreshold)
+            );
         }
     }, [translateX]);
 
+    // Recalculate scrollability when cast list or window size changes
     const castList = mediaType === 'movie' ? movieCredits?.cast : showsCredits?.cast;
+
+    useEffect(() => {
+        const handleResizeOrContentChange = () => {
+            if (wrapperRef.current && containerRef.current) {
+                const contentWidth = wrapperRef.current.offsetWidth;
+                const containerWidth = containerRef.current.offsetWidth;
+                const canScrollRight = contentWidth - containerWidth > scrollThreshold;
+                setIsScrollEnd(!canScrollRight);
+            }
+        };
+
+        handleResizeOrContentChange();
+        window.addEventListener('resize', handleResizeOrContentChange);
+        return () => window.removeEventListener('resize', handleResizeOrContentChange);
+    }, [castList]);
+
+    const canScrollRight =
+        wrapperRef.current &&
+        containerRef.current &&
+        translateX >
+            -(
+                wrapperRef.current.offsetWidth -
+                containerRef.current.offsetWidth -
+                scrollThreshold
+            );
+
+    const canScrollLeft = translateX < 0;
 
     return (
         <div className="cast-scroller-container" ref={containerRef}>
             <div className="cast-scroller-inner">
                 <div
                     className="shadow-overlay shadow-overlay-start"
-                    style={{ opacity: translateX !== 0 ? 1 : 0 }}
+                    style={{
+                        opacity: canScrollLeft ? 1 : 0,
+                        pointerEvents: canScrollLeft ? 'auto' : 'none'
+                    }}
                 >
                     <PreviousButton
                         className="carouselBtns prevBtn"
                         onClick={scrollLeft}
-                        disabled={translateX === 0}
+                        disabled={!canScrollLeft}
                     />
                 </div>
 
@@ -91,31 +124,15 @@ export default function CastScroller() {
                 <div
                     className="shadow-overlay shadow-overlay-end"
                     style={{
-                        opacity:
-                            !isInitialLoad &&
-                            wrapperRef.current &&
-                            containerRef.current &&
-                            translateX >
-                                -(
-                                    wrapperRef.current.offsetWidth -
-                                    containerRef.current.offsetWidth
-                                )
-                                ? 1
-                                : 0
+                        opacity: canScrollRight ? 1 : 0,
+                        pointerEvents: canScrollRight ? 'auto' : 'none'
                     }}
                 >
                     <NextButton
                         className="carouselBtns nextBtn"
                         onClick={scrollRight}
-                        disabled={
-                            !isInitialLoad && wrapperRef.current && containerRef.current
-                                ? translateX <=
-                                  -(
-                                      wrapperRef.current.offsetWidth -
-                                      containerRef.current.offsetWidth
-                                  )
-                                : true
-                        }
+                        // disabled={!canScrollRight}
+                        disabled={true}
                     />
                 </div>
             </div>

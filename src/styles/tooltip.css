@@ -17,11 +17,12 @@
     z-index: 10000;
     font-family: 'Montserrat', sans-serif;
     transform: translateX(-50%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
     box-shadow: 1px 1px 7px rgba(13, 17, 24, 0.7);
     border: 1px solid rgba(196, 193, 198, 0.15);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: left;
     transform: translateX(-50%);
     opacity: 0;
     transition:

@@ -35,18 +35,25 @@ const ShowsMeta = ({
                                 {country}
                                 {index < shows.origin_country.length - 1 ? ', ' : ''}
                             </span>
+
+                            <sup>
+                                <svg className="metadata-icon">
+                                    <use xlinkHref={`${sprite}#help`} />
+                                </svg>
+                            </sup>
                         </Tooltip>
                     ))
                 ) : (
                     <Tooltip content={countryNames[shows.origin_country]}>
                         <span>{shows.origin_country}</span>
+
+                        <sup>
+                            <svg className="metadata-icon">
+                                <use xlinkHref={`${sprite}#help`} />
+                            </svg>
+                        </sup>
                     </Tooltip>
                 )}
-                <sup>
-                    <svg className="metadata-icon">
-                        <use xlinkHref={`${sprite}#help`} />
-                    </svg>
-                </sup>
             </>
 
             {adult !== undefined && (

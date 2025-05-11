@@ -43,24 +43,34 @@ const MovieMetadata = ({
             <>
                 <span className="separator">•</span>
                 {Array.isArray(movie.origin_country) ? (
-                    movie.origin_country.map((country, index) => (
-                        <Tooltip key={country} content={countryNames[country]}>
-                            <span>
-                                {country}
-                                {index < movie.origin_country.length - 1 ? ', ' : ''}
-                            </span>
-                        </Tooltip>
-                    ))
+                    movie.origin_country.map((country, index) => {
+                        const label = countryNames[country];
+                        return (
+                            <Tooltip key={country} content={label}>
+                                <span>
+                                    {country}
+                                    {index < movie.origin_country.length - 1 ? ', ' : ''}
+                                    <sup>
+                                        <svg className="metadata-icon">
+                                            <use xlinkHref={`${sprite}#help`} />
+                                        </svg>
+                                    </sup>
+                                </span>
+                            </Tooltip>
+                        );
+                    })
                 ) : (
-                    <span title={countryNames[movie.origin_country]}>
-                        {movie.origin_country}
-                    </span>
+                    <Tooltip content={countryNames[movie.origin_country]}>
+                        <span>
+                            {movie.origin_country}
+                            <sup>
+                                <svg className="metadata-icon">
+                                    <use xlinkHref={`${sprite}#help`} />
+                                </svg>
+                            </sup>
+                        </span>
+                    </Tooltip>
                 )}
-                <sup>
-                    <svg className="metadata-icon">
-                        <use xlinkHref={`${sprite}#help`} />
-                    </svg>
-                </sup>
             </>
 
             {adult !== undefined && (

@@ -3,73 +3,70 @@ import sprite from '../../styles/sprite.svg';
 import Tooltip from '../app/Tooltip';
 import PropTypes from 'prop-types';
 
+const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    return [date.getDate(), date.getMonth() + 1, date.getFullYear()].join('/');
+};
+
+const MetadataItem = ({ tooltip, children }) => (
+    <Tooltip content={tooltip}>
+        <>
+            {children}
+            <sup>
+                <svg className="cast-member-details-page__metadata-icon">
+                    <use xlinkHref={`${sprite}#help`} />
+                </svg>
+            </sup>
+        </>
+    </Tooltip>
+);
+
 const MetadataDisplay = React.memo(({ castDetailsData, age }) => {
+    const { deathday, birthday, place_of_birth, known_for_department } =
+        castDetailsData || {};
+
+    const dateTooltip = deathday ? (
+        <>
+            <div>Born: {formatDate(birthday)}</div>
+            <div>Died: {formatDate(deathday)}</div>
+        </>
+    ) : birthday ? (
+        formatDate(birthday)
+    ) : (
+        ''
+    );
+
     return (
         <p className="cast-member-details-page__metadata">
-            {castDetailsData?.deathday ? (
-                <Tooltip
-                    content={new Date(castDetailsData.deathday).toLocaleDateString('en-GB')}
-                    placement='auto'
-                >
-                    Passed away at {age}
-                    <sup>
-                        <svg className="cast-member-details-page__metadata-icon">
-                            <use xlinkHref={`${sprite}#help`} />
-                        </svg>
-                    </sup>
-                </Tooltip>
-            ) : (
-                castDetailsData?.birthday && (
-                    <Tooltip
-                        content={new Date(castDetailsData.birthday).toLocaleDateString(
-                            'en-GB'
-                        )}
-                        placement='auto'
-                    >
-                        {age} years old
-                        <sup>
-                            <svg className="cast-member-details-page__metadata-icon">
-                                <use xlinkHref={`${sprite}#help`} />
-                            </svg>
-                        </sup>
-                    </Tooltip>
-                )
+            {birthday && (
+                <MetadataItem tooltip={dateTooltip}>
+                    {deathday ? `Passed away at ${age}` : `${age} years old`}
+                </MetadataItem>
             )}
 
-            {castDetailsData?.place_of_birth && (
+            {place_of_birth && (
                 <>
                     <span className="cast-member-details-page__metadata-separator">
                         •
                     </span>
-                    <Tooltip content="Place of Birth" placement='auto'>
-                        {castDetailsData.place_of_birth}
-                        <sup>
-                            <svg className="cast-member-details-page__metadata-icon ">
-                                <use xlinkHref={`${sprite}#help`} />
-                            </svg>
-                        </sup>
-                    </Tooltip>
+                    <MetadataItem tooltip="Place of Birth">{place_of_birth}</MetadataItem>
                 </>
             )}
 
-            {castDetailsData?.known_for_department && (
+            {known_for_department && (
                 <>
                     <span className="cast-member-details-page__metadata-separator">
                         •
                     </span>
-                    <Tooltip content="Known For" placement='auto'>
-                        {castDetailsData.known_for_department}
-                        <sup>
-                            <svg className="cast-member-details-page__metadata-icon">
-                                <use xlinkHref={`${sprite}#help`} />
-                            </svg>
-                        </sup>
-                    </Tooltip>
+                    <MetadataItem tooltip="Known For">
+                        {known_for_department}
+                    </MetadataItem>
                 </>
             )}
         </p>
     );
 });
+
 MetadataDisplay.displayName = 'MetadataDisplay';
 
 MetadataDisplay.propTypes = {
