@@ -204,6 +204,7 @@
 /* ----------------------------------
    Up Next Section
 ---------------------------------- */
+
 .up-next-container {
     position: fixed;
     top: 160px;
@@ -308,6 +309,7 @@
 /* ----------------------------------
    Navigation Menu
 ---------------------------------- */
+
 .navigation-menu-container {
     position: absolute;
     top: 50%;
@@ -359,17 +361,17 @@
 
 .indicator {
     position: absolute;
-    left: -2px;
-    width: 4px;
+    left: -3px;
+    width: 5px;
     height: 30px;
-    background-color: #ffffff;
+    background-color: rgb(175, 187, 242);
     border-radius: 999px;
     margin-block: 6px;
     transition: top 0.2s ease-in-out;
     box-shadow:
-        0 0 10px #ffffff,
-        0 0 20px #ffffff,
-        0 0 30px #ffffff;
+        0 0 10px rgba(175, 187, 242, 0.65),
+        0 0 20px rgba(175, 187, 242, 0.65),
+        0 0 30px rgba(175, 187, 242, 0.65);
 }
 
 .navigation-menu-content button {
