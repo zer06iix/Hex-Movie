@@ -1,13 +1,15 @@
 import React from 'react';
 import sprite from '../../styles/sprite.svg';
+import Tooltip from '../app/Tooltip';
 import PropTypes from 'prop-types';
 
 const MetadataDisplay = React.memo(({ castDetailsData, age }) => {
     return (
         <p className="cast-member-details-page__metadata">
             {castDetailsData?.deathday ? (
-                <span
-                    title={new Date(castDetailsData.deathday).toLocaleDateString('en-GB')}
+                <Tooltip
+                    content={new Date(castDetailsData.deathday).toLocaleDateString('en-GB')}
+                    placement='auto'
                 >
                     Passed away at {age}
                     <sup>
@@ -15,13 +17,14 @@ const MetadataDisplay = React.memo(({ castDetailsData, age }) => {
                             <use xlinkHref={`${sprite}#help`} />
                         </svg>
                     </sup>
-                </span>
+                </Tooltip>
             ) : (
                 castDetailsData?.birthday && (
-                    <span
-                        title={new Date(castDetailsData.birthday).toLocaleDateString(
+                    <Tooltip
+                        content={new Date(castDetailsData.birthday).toLocaleDateString(
                             'en-GB'
                         )}
+                        placement='auto'
                     >
                         {age} years old
                         <sup>
@@ -29,7 +32,7 @@ const MetadataDisplay = React.memo(({ castDetailsData, age }) => {
                                 <use xlinkHref={`${sprite}#help`} />
                             </svg>
                         </sup>
-                    </span>
+                    </Tooltip>
                 )
             )}
 
@@ -38,14 +41,14 @@ const MetadataDisplay = React.memo(({ castDetailsData, age }) => {
                     <span className="cast-member-details-page__metadata-separator">
                         •
                     </span>
-                    <span title="Place of Birth">
+                    <Tooltip content="Place of Birth" placement='auto'>
                         {castDetailsData.place_of_birth}
                         <sup>
                             <svg className="cast-member-details-page__metadata-icon ">
                                 <use xlinkHref={`${sprite}#help`} />
                             </svg>
                         </sup>
-                    </span>
+                    </Tooltip>
                 </>
             )}
 
@@ -54,14 +57,14 @@ const MetadataDisplay = React.memo(({ castDetailsData, age }) => {
                     <span className="cast-member-details-page__metadata-separator">
                         •
                     </span>
-                    <span title="Known For">
+                    <Tooltip content="Known For" placement='auto'>
                         {castDetailsData.known_for_department}
                         <sup>
                             <svg className="cast-member-details-page__metadata-icon">
                                 <use xlinkHref={`${sprite}#help`} />
                             </svg>
                         </sup>
-                    </span>
+                    </Tooltip>
                 </>
             )}
         </p>
