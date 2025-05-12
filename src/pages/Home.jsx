@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 import Loading from '../components/app/Loading';
 import MediaCarousel from '../components/homePage/imageCarousel/MediaCarousel';
 import UpNextSection from '../components/homePage/upNext/UpNextSection';
-import NavigationMenu from '../components/HomePage/NavigationMenu';
+import NavigationMenu from '../components/homePage/NavigationMenu';
 
 import useFetchStore from '../stores/fetchStore';
 import useMovieStore from '../stores/movieStore';
@@ -19,7 +19,7 @@ export default function Home() {
         fetchPopularShows,
         fetchTrendingShows,
         fetchUpcomingMovies, // Add fetchUpcomingMovies
-        fetchUpcomingShows, // Add fetchUpcomingShows
+        fetchAiringShows, // Add fetchAiringShows
         fetchShowsDetails
     } = useFetchStore();
 
@@ -81,12 +81,12 @@ export default function Home() {
     });
 
     const {
-        data: upcomingShowsData,
-        error: upcomingShowsError,
-        isLoading: isUpcomingShowsLoading
+        data: airingShowsData,
+        error: airingShowsError,
+        isLoading: isAiringShowsLoading
     } = useQuery({
-        queryKey: ['upcomingShows'],
-        queryFn: () => fetchUpcomingShows()
+        queryKey: ['airingShows'],
+        queryFn: () => fetchAiringShows()
     });
 
     // Update stores when data changes
@@ -118,36 +118,46 @@ export default function Home() {
         setTrendingShows
     ]);
 
+
+
     // Determine the current navigations based on selectedIndex
-    let navigations = [];
-    switch (selectedIndex) {
-        case 0:
-            navigations = trendingMovies;
-            break;
-        case 1:
-            navigations = trendingShows;
-            break;
-        case 2:
-            navigations = popularMovies;
-            break;
-        case 3:
-            navigations = popularShows;
-            break;
-        case 4:
-            navigations = upcomingMoviesData; // For upcoming movies
-            break;
-        case 5:
-            navigations = upcomingShowsData; // For upcoming shows
-            break;
-        default:
-            navigations = [];
-            break;
-    }
+    const navigations = useMemo(() => {
+        switch (selectedIndex) {
+            case 0:
+                return trendingMovies || [];
+            case 1:
+                return trendingShows || [];
+            case 2:
+                return popularMovies || [];
+            case 3:
+                return popularShows || [];
+            case 4:
+                return upcomingMoviesData || [];
+            case 5:
+                return airingShowsData || [];
+            default:
+                return [];
+        }
+    }, [
+        selectedIndex,
+        trendingMovies,
+        trendingShows,
+        popularMovies,
+        popularShows,
+        upcomingMoviesData,
+        airingShowsData
+    ]);
+
+    useEffect(() => {
+        console.log('Current navigations:', navigations);
+    }, [navigations]);
 
     // Fetch additional details for TV shows
-    const tvShowIds = navigations
-        .filter((media) => media.media_type === 'tv' && media.id) // Ensure ID exists
-        .map((media) => media.id);
+    const tvShowIds = useMemo(() => {
+        return (navigations || [])
+            .filter((media) => media?.media_type === 'tv' && media?.id)
+            .map((media) => media.id);
+    }, [navigations]);
 
     const {
         data: tvShowDetails,
@@ -160,30 +170,32 @@ export default function Home() {
     });
 
     // Merge additional details into navigations
-    const enhancedNavigations = navigations.map((media) => {
-        if (media.media_type === 'tv') {
-            const details = tvShowDetails?.find((detail) => detail.id === media.id);
-            return { ...media, ...details }; // Merge additional details
-        }
-        return media; // Return unchanged for movies
-    });
+    const enhancedNavigations = useMemo(() => {
+        return navigations.map((media) => {
+            if (media.media_type === 'tv') {
+                const details = tvShowDetails?.find((detail) => detail.id === media.id);
+                return { ...media, ...details };
+            }
+            return media;
+        });
+    }, [navigations, tvShowDetails]);
 
     // Combine loading and error states
     const isLoading =
-        isPopularMoviesLoading ||
-        isTrendingMoviesLoading ||
-        isPopularShowsLoading ||
-        isTrendingShowsLoading ||
-        isUpcomingMoviesLoading ||
-        isUpcomingShowsLoading ||
-        isLoadingTvShowDetails;
+    (selectedIndex === 0 && isTrendingMoviesLoading) ||
+    (selectedIndex === 1 && isTrendingShowsLoading) ||
+    (selectedIndex === 2 && isPopularMoviesLoading) ||
+    (selectedIndex === 3 && isPopularShowsLoading) ||
+    (selectedIndex === 4 && isUpcomingMoviesLoading) ||
+    (selectedIndex === 5 && isAiringShowsLoading) ||
+    isLoadingTvShowDetails;
     const error =
         popularMoviesError ||
         trendingMoviesError ||
         popularShowsError ||
         trendingShowsError ||
         upcomingMoviesError ||
-        upcomingShowsError ||
+        airingShowsError ||
         tvShowDetailsError;
 
     if (isLoading) {

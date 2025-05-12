@@ -145,7 +145,7 @@ const useFetchStore = create((set) => ({
         return response.data.results;
     },
 
-    fetchUpcomingShows: async () => {
+    fetchAiringShows: async () => {
         const url = createApiUrl('/tv/airing_today');
         const response = await axios.get(url);
         return response.data.results;

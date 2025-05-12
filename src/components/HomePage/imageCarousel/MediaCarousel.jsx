@@ -39,7 +39,7 @@ export default function MediaCarousel({ media, wrapperRef, upNextWrapperRef, sel
 
     // Update the carousel detail instantly before the transition
     const updateCarouselDetail = (direction) => {
-        const newIndex = direction === 1 
+        const newIndex = direction === 1
             ? (currentSlide + 1) % totalSlides 
             : (currentSlide - 1 + totalSlides) % totalSlides;
         
@@ -151,8 +151,8 @@ export default function MediaCarousel({ media, wrapperRef, upNextWrapperRef, sel
                                 {displayedMedia.release_date
                                     ? new Date(displayedMedia.release_date).getFullYear()
                                     : displayedMedia.first_air_date
-                                      ? new Date(displayedMedia.first_air_date).getFullYear()
-                                      : 'N/A'}
+                                    ? new Date(displayedMedia.first_air_date).getFullYear()
+                                    : 'N/A'}
                                 )
                             </p>
                             <div style={{ display: 'flex', alignItems: 'center' }}>
