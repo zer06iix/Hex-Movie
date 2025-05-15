@@ -3,11 +3,28 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import DynamicButton from '../../components/buttons/DynamicButton';
 import MediaScroller from '../../components/castPage/media/MediaScroller';
+import MediaItem from './media/MediaItem';
 import sprite from '../../styles/sprite.svg';
+import HorizontalCarousel from '../app/HorizantalCarousel';
 
 const FilmographySection = React.memo(
     ({ castDetailsData, castCreditsData, numberOfMedia }) => {
         // const gender = castDetailsData.gender
+
+        const sortedCastCredits = React.useMemo(() => {
+            if (castCreditsData?.cast) {
+                const uniqueMedia = new Map();
+                castCreditsData.cast.forEach((media) => {
+                    if (!uniqueMedia.has(media.id) && media.vote_count > 50) {
+                        uniqueMedia.set(media.id, media);
+                    }
+                });
+                return [...uniqueMedia.values()].sort(
+                    (a, b) => b.vote_average - a.vote_average
+                );
+            }
+            return [];
+        }, [castCreditsData]);
 
         if (!castCreditsData?.cast) return null;
 
@@ -25,7 +42,11 @@ const FilmographySection = React.memo(
                         </svg>
                     </p>
                 </div>
-                <MediaScroller />
+                <HorizontalCarousel
+                    items={sortedCastCredits}
+                    renderItem={(media) => <MediaItem media={media} />}
+                    scrollKey="filmographyScroll"
+                />
             </div>
         );
     }

@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/prop-types */
+import PropTypes from 'prop-types';
 import Loading from '../components/app/Loading';
 import CastScroller from '../components/contentPage/cast/CastScroller';
 import MediaExpandable from '../components/contentPage/MediaExpandable';
@@ -82,7 +81,6 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
 
     return (
         <div className="content-container">
-            {/* Static fallback background color */}
             <div
                 className="content-template__background-overlay"
                 style={{ backgroundColor: 'rgba(0, 0, 0, 0.25)' }}
@@ -158,6 +156,38 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
             <ReactSVG src={sprite} style={{ display: 'none' }} />
         </div>
     );
+};
+
+ContentTemplate.propTypes = {
+    type: PropTypes.oneOf(['Movie', 'Show']).isRequired,
+    media: PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        title: PropTypes.string,
+        name: PropTypes.string,
+        release_date: PropTypes.string,
+        first_air_date: PropTypes.string,
+        last_air_date: PropTypes.string,
+        in_production: PropTypes.bool,
+        adult: PropTypes.bool,
+        runtime: PropTypes.number,
+        genres: PropTypes.arrayOf(
+            PropTypes.shape({
+                id: PropTypes.number,
+                name: PropTypes.string
+            })
+        ),
+        vote_average: PropTypes.number,
+        vote_count: PropTypes.number,
+        popularity: PropTypes.number,
+        overview: PropTypes.string,
+        poster_path: PropTypes.string,
+        profile_path: PropTypes.string,
+        seasons: PropTypes.arrayOf(PropTypes.object)
+    }).isRequired,
+    creditsData: PropTypes.shape({
+        cast: PropTypes.arrayOf(PropTypes.object)
+    }),
+    genresMap: PropTypes.object.isRequired
 };
 
 export default ContentTemplate;

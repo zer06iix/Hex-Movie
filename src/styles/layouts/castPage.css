@@ -236,6 +236,58 @@
 
 /* Filmography */
 
+.filmography__section .carousel-container {
+    position: relative;
+    width: 100%;
+    height: 170px;
+    overflow: hidden;
+}
+
+.carousel-wrapper {
+    will-change: transform;
+}
+
+.carousel-item {
+    flex: 0 0 auto;
+    margin-right: 1rem;
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    padding: 0.5rem;
+}
+
+.carousel-btn.left {
+    left: 0.5rem;
+}
+
+.carousel-btn.right {
+    right: 0.5rem;
+}
+
+.carousel-shadow {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 80px;
+    z-index: 1; /* ✅ behind buttons */
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.shadow-left {
+    left: 0;
+    background: linear-gradient(to right, rgb(13, 17, 24), transparent);
+}
+
+.shadow-right {
+    right: 0;
+    background: linear-gradient(to left, rgb(13, 17, 24), transparent);
+}
+
 .media-image-container {
     height: 170px;
     aspect-ratio: 5.5/9;
@@ -262,11 +314,13 @@
 .media-scroller-inner .shadow-overlay {
     position: absolute;
     top: 0;
-    height: 100%;
+    left: 0;
+    height: 100px;
     width: 100px;
     pointer-events: none;
     z-index: 3;
     transition: opacity 0.3s ease;
+    border: 1px solid lime;
 }
 
 .media-scroller-inner .shadow-overlay > * {

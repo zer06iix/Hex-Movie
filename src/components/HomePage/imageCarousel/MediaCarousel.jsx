@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
@@ -13,7 +12,12 @@ import MouseDownDetector from './MouseDownDetector';
 import useCarouselStore from '../../../stores/carouselStore';
 import VoteAverage from '../imageCarousel/VoteAverage';
 
-export default function MediaCarousel({ media, wrapperRef, upNextWrapperRef, selectedIndex }) {
+export default function MediaCarousel({
+    media,
+    wrapperRef,
+    upNextWrapperRef,
+    selectedIndex
+}) {
     const transitionLength = 380;
     const currentSlideRef = useRef(null);
     const { prevSlide, currentSlide, nextSlide } = useCarouselStore();
@@ -39,10 +43,11 @@ export default function MediaCarousel({ media, wrapperRef, upNextWrapperRef, sel
 
     // Update the carousel detail instantly before the transition
     const updateCarouselDetail = (direction) => {
-        const newIndex = direction === 1
-            ? (currentSlide + 1) % totalSlides 
-            : (currentSlide - 1 + totalSlides) % totalSlides;
-        
+        const newIndex =
+            direction === 1
+                ? (currentSlide + 1) % totalSlides
+                : (currentSlide - 1 + totalSlides) % totalSlides;
+
         const newSlide = media[newIndex];
         setDisplayedMedia(newSlide);
     };
@@ -145,14 +150,19 @@ export default function MediaCarousel({ media, wrapperRef, upNextWrapperRef, sel
 
                 {displayedMedia && (
                     <div className="carousel-detail-bg fixed-carousel-detail">
-                        <div key={displayedMedia.id} className="carousel-detail-content fade-in">
+                        <div
+                            key={displayedMedia.id}
+                            className="carousel-detail-content fade-in"
+                        >
                             <p className="carousel-detail-title">
                                 {displayedMedia.title || displayedMedia.name} (
                                 {displayedMedia.release_date
                                     ? new Date(displayedMedia.release_date).getFullYear()
                                     : displayedMedia.first_air_date
-                                    ? new Date(displayedMedia.first_air_date).getFullYear()
-                                    : 'N/A'}
+                                      ? new Date(
+                                            displayedMedia.first_air_date
+                                        ).getFullYear()
+                                      : 'N/A'}
                                 )
                             </p>
                             <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -197,5 +207,5 @@ MediaCarousel.propTypes = {
     media: PropTypes.arrayOf(PropTypes.object).isRequired,
     wrapperRef: PropTypes.object.isRequired,
     upNextWrapperRef: PropTypes.object.isRequired,
-    selectedIndex: PropTypes.number.isRequired,
+    selectedIndex: PropTypes.number.isRequired
 };
