@@ -8,6 +8,7 @@
 
     display: flex;
     justify-content: center;
+    border: 1px dolie lime;
 }
 
 .content-template__background-overlay {

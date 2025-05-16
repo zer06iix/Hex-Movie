@@ -8,7 +8,7 @@ import sprite from '../../styles/sprite.svg';
 import HorizontalCarousel from '../app/HorizantalCarousel';
 
 const FilmographySection = React.memo(
-    ({ castDetailsData, castCreditsData, numberOfMedia }) => {
+    ({ castDetailsData, castCreditsData, numberOfMedia, scrollId }) => {
         // const gender = castDetailsData.gender
 
         const sortedCastCredits = React.useMemo(() => {
@@ -45,7 +45,9 @@ const FilmographySection = React.memo(
                 <HorizontalCarousel
                     items={sortedCastCredits}
                     renderItem={(media) => <MediaItem media={media} />}
-                    scrollKey="filmographyScroll"
+                    scrollStep={300}
+                    scrollId={scrollId}
+                    componentName="FilmographySection"
                 />
             </div>
         );

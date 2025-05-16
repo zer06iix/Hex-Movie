@@ -192,6 +192,7 @@ export default function CastPage() {
                             castDetailsData={castDetailsData}
                             castCreditsData={castCreditsData}
                             numberOfMedia={numberOfMedia}
+                            scrollId={castDetailsData?.id}
                         />
                     )}
                 </div>

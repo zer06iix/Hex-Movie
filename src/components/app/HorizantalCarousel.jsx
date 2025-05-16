@@ -7,7 +7,8 @@ export default function HorizontalCarousel({
     items,
     renderItem,
     scrollStep = 300,
-    scrollKey
+    scrollId,
+    componentName = 'HorizontalCarousel'
 }) {
     const wrapperRef = useRef(null);
     const containerRef = useRef(null);
@@ -17,16 +18,20 @@ export default function HorizontalCarousel({
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(false);
 
-    useEffect(() => {
-        if (!scrollKey) return;
-        const saved = localStorage.getItem(scrollKey);
-        if (saved !== null) setTranslateX(parseInt(saved, 10));
-    }, [scrollKey]);
+    const fullScrollKey = scrollId
+        ? `carousel-scroll::${componentName}::${scrollId}`
+        : null;
 
     useEffect(() => {
-        if (scrollKey) localStorage.setItem(scrollKey, translateX);
+        if (!fullScrollKey) return;
+        const saved = localStorage.getItem(fullScrollKey);
+        if (saved !== null) setTranslateX(parseInt(saved, 10));
+    }, [fullScrollKey]);
+
+    useEffect(() => {
+        if (fullScrollKey) localStorage.setItem(fullScrollKey, translateX);
         updateScrollBounds();
-    }, [translateX, items, scrollKey]);
+    }, [translateX, items, fullScrollKey]);
 
     useEffect(() => {
         window.addEventListener('resize', updateScrollBounds);
@@ -50,7 +55,6 @@ export default function HorizontalCarousel({
 
         const targetX = -currentX;
 
-        // Find closest item whose left is just after targetX
         let closestIndex = 0;
         let minDistance = Infinity;
 
@@ -71,13 +75,11 @@ export default function HorizontalCarousel({
 
     return (
         <div className="carousel-container" ref={containerRef}>
-            {/* Left Shadow */}
             <div
                 className="carousel-shadow shadow-left"
                 style={{ opacity: canScrollLeft ? 1 : 0 }}
             />
 
-            {/* Left Button */}
             {canScrollLeft && (
                 <PreviousButton
                     className="carouselBtns prevBtn"
@@ -85,7 +87,6 @@ export default function HorizontalCarousel({
                 />
             )}
 
-            {/* Wrapper */}
             <div
                 className="carousel-wrapper"
                 ref={wrapperRef}
@@ -106,13 +107,11 @@ export default function HorizontalCarousel({
                 ))}
             </div>
 
-            {/* Right Shadow */}
             <div
                 className="carousel-shadow shadow-right"
                 style={{ opacity: canScrollRight ? 1 : 0 }}
             />
 
-            {/* Right Button */}
             {canScrollRight && (
                 <NextButton
                     className="carouselBtns nextBtn"
@@ -127,5 +126,6 @@ HorizontalCarousel.propTypes = {
     items: PropTypes.arrayOf(PropTypes.object).isRequired,
     renderItem: PropTypes.func.isRequired,
     scrollStep: PropTypes.number,
-    scrollKey: PropTypes.string
+    scrollId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    componentName: PropTypes.string
 };
