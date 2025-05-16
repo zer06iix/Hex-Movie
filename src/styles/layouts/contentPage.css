@@ -330,6 +330,12 @@
     color: rgb(196, 193, 198);
 }
 
+.content-template__cast-section > .carousel-container {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
 .content-template__cast-title {
     font-size: 2.2rem;
     font-weight: 500;

@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import Loading from '../components/app/Loading';
-import CastScroller from '../components/contentPage/cast/CastScroller';
 import MediaExpandable from '../components/contentPage/MediaExpandable';
 import DynamicButton from '../components/buttons/DynamicButton';
 import MovieMeta from '../components/moviePage/MovieMeta';
@@ -8,8 +7,10 @@ import ShowsMeta from '../components/showsPage/ShowsMeta';
 import MediaGenre from '../components/contentPage/MediaGenre';
 import MediaRating from '../components/contentPage/MediaRating';
 import MediaPoster from '../components/contentPage/MediaPoster';
-import sprite from '../styles/sprite.svg';
+import CastItem from '../components/contentPage/cast/CastItem';
+import HorizontalCarousel from '../components/app/HorizantalCarousel';
 import Tooltip from '../components/app/Tooltip';
+import sprite from '../styles/sprite.svg';
 import { ReactSVG } from 'react-svg';
 
 const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
@@ -77,7 +78,9 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
     const imagePath =
         media.poster_path || media.profile_path
             ? `https://image.tmdb.org/t/p/w500${media.poster_path || media.profile_path}`
-            : 'path_to_placeholder_image'; // Fallback image
+            : 'path_to_placeholder_image';
+
+    const castList = creditsData?.cast || [];
 
     return (
         <div className="content-container">
@@ -129,13 +132,13 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
                     </div>
                 </div>
 
-                {creditsData?.cast?.length > 0 && (
+                {castList.length > 0 && (
                     <div className="content-template__cast-section">
                         <div className="content-template__cast-header">
                             <p className="content-template__cast-title">
                                 Cast Members
                                 <DynamicButton className="content-template__cast-count">
-                                    {creditsData.cast.length}
+                                    {castList.length}
                                 </DynamicButton>
                                 <svg className="content-template__cast-icon">
                                     <use xlinkHref={`${sprite}#arrow-forward`} />
@@ -145,9 +148,12 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
                                 Cast & crew
                             </DynamicButton>
                         </div>
-                        <CastScroller
-                            mediaId={media.id}
-                            mediaType={isMovie ? 'movie' : 'shows'}
+
+                        <HorizontalCarousel
+                            items={castList}
+                            renderItem={(member) => <CastItem member={member} />}
+                            scrollStep={300}
+                            scrollKey={`cast-scroll-${media.id}`}
                         />
                     </div>
                 )}

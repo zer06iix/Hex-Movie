@@ -131,8 +131,7 @@ export default function CastScroller() {
                     <NextButton
                         className="carouselBtns nextBtn"
                         onClick={scrollRight}
-                        // disabled={!canScrollRight}
-                        disabled={true}
+                        disabled={!canScrollRight}
                     />
                 </div>
             </div>

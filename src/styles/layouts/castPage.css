@@ -272,20 +272,20 @@
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 80px;
-    z-index: 1; /* ✅ behind buttons */
+    width: 100px;
+    z-index: 1;
     pointer-events: none;
     transition: opacity 0.3s ease;
 }
 
 .shadow-left {
     left: 0;
-    background: linear-gradient(to right, rgb(13, 17, 24), transparent);
+    background: linear-gradient(to right, rgba(13, 17, 24, 1), rgba(13, 17, 24, 0));
 }
 
 .shadow-right {
     right: 0;
-    background: linear-gradient(to left, rgb(13, 17, 24), transparent);
+    background: linear-gradient(to left, rgba(13, 17, 24, 1), rgba(13, 17, 24, 0));
 }
 
 .media-image-container {
