@@ -1,11 +1,9 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
 import DynamicButton from '../../components/buttons/DynamicButton';
-import MediaScroller from '../../components/castPage/media/MediaScroller';
 import MediaItem from './media/MediaItem';
 import sprite from '../../styles/sprite.svg';
-import HorizontalCarousel from '../app/HorizantalCarousel';
+import HorizontalCarousel from '../app/HorizontalCarousel';
 
 const FilmographySection = React.memo(
     ({ castDetailsData, castCreditsData, numberOfMedia, scrollId }) => {
@@ -26,7 +24,7 @@ const FilmographySection = React.memo(
             return [];
         }, [castCreditsData]);
 
-        if (!castCreditsData?.cast) return null;
+        if (!castCreditsData?.cast?.length) return null;
 
         return (
             <div className="filmography__section">
@@ -53,14 +51,25 @@ const FilmographySection = React.memo(
         );
     }
 );
+
 FilmographySection.displayName = 'FilmographySection';
 
 FilmographySection.propTypes = {
-    castCreditsData: PropTypes.shape({
-        // Should be an array of media objects
-        cast: PropTypes.arrayOf(PropTypes.object)
+    castDetailsData: PropTypes.shape({
+        gender: PropTypes.number,
+        id: PropTypes.number
     }),
-    numberOfMedia: PropTypes.number.isRequired
+    castCreditsData: PropTypes.shape({
+        cast: PropTypes.arrayOf(
+            PropTypes.shape({
+                id: PropTypes.number.isRequired,
+                vote_average: PropTypes.number,
+                vote_count: PropTypes.number
+            })
+        )
+    }),
+    numberOfMedia: PropTypes.number.isRequired,
+    scrollId: PropTypes.number
 };
 
 export default FilmographySection;

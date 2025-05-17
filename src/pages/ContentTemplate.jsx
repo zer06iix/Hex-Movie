@@ -8,7 +8,7 @@ import MediaGenre from '../components/contentPage/MediaGenre';
 import MediaRating from '../components/contentPage/MediaRating';
 import MediaPoster from '../components/contentPage/MediaPoster';
 import CastItem from '../components/contentPage/cast/CastItem';
-import HorizontalCarousel from '../components/app/HorizantalCarousel';
+import HorizontalCarousel from '../components/app/HorizontalCarousel';
 import Tooltip from '../components/app/Tooltip';
 import sprite from '../styles/sprite.svg';
 import { ReactSVG } from 'react-svg';
@@ -108,7 +108,9 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
                             />
                         ) : (
                             <ShowsMeta
-                                showFormattedDate={showFormattedDate}
+                                firstAirDate={media.first_air_date}
+                                lastAirDate={media.last_air_date}
+                                inProduction={media.in_production}
                                 seasonsCount={media.seasons.length}
                                 adult={media.adult}
                                 ratingTitle={ratingTitle}

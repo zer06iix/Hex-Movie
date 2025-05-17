@@ -46,17 +46,20 @@ const MovieMetadata = ({
                     movie.origin_country.map((country, index) => {
                         const label = countryNames[country];
                         return (
-                            <Tooltip key={country} content={label}>
-                                <span>
-                                    {country}
-                                    {index < movie.origin_country.length - 1 ? ', ' : ''}
-                                    <sup>
-                                        <svg className="metadata-icon">
-                                            <use xlinkHref={`${sprite}#help`} />
-                                        </svg>
-                                    </sup>
-                                </span>
-                            </Tooltip>
+                            <>
+                                <Tooltip key={country} content={label}>
+                                    <span>
+                                        {country}
+                                        <sup>
+                                            <svg className="metadata-icon">
+                                                <use xlinkHref={`${sprite}#help`} />
+                                            </svg>
+                                        </sup>
+                                    </span>
+                                </Tooltip>
+
+                                {index < movie.origin_country.length - 1 ? ', ' : ''}
+                            </>
                         );
                     })
                 ) : (

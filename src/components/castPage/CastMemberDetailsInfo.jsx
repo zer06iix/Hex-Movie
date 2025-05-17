@@ -64,23 +64,29 @@ const CastMemberDetailsInfo = memo(
         );
     }
 );
+
 CastMemberDetailsInfo.displayName = 'CastMemberDetailsInfo';
 
 CastMemberDetailsInfo.propTypes = {
     castDetailsData: PropTypes.shape({
-        name: PropTypes.string
+        name: PropTypes.string,
+        birthday: PropTypes.string,
+        deathday: PropTypes.string,
+        biography: PropTypes.string
     }),
     age: PropTypes.number,
     handleOpenBioModal: PropTypes.func.isRequired,
-    renderModal: PropTypes.bool,
+    renderModal: PropTypes.bool.isRequired,
     isBioModalOpen: PropTypes.bool.isRequired,
-    bioModalRef: PropTypes.shape({ current: PropTypes.any }).isRequired,
+    bioModalRef: PropTypes.shape({
+        current: PropTypes.instanceOf(Element)
+    }).isRequired,
     handleCloseBioModal: PropTypes.func.isRequired,
     bioSource: PropTypes.oneOf(['tmdb', 'wikipedia']).isRequired,
     setBioSource: PropTypes.func.isRequired,
     castDetailsLoading: PropTypes.bool.isRequired,
     castDetailsError: PropTypes.object,
-    wikipediaBioLoading: PropTypes.bool.isRequired,
+    wikipediaBioLoading: PropTypes.bool,
     wikipediaBioError: PropTypes.object,
     wikipediaBio: PropTypes.string
 };
