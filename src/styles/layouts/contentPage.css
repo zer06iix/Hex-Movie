@@ -32,6 +32,7 @@
     height: 500px;
     display: flex;
     padding-top: 35px;
+    margin-bottom: 75px;
     gap: 30px;
 }
 
@@ -72,7 +73,7 @@
     position: absolute;
     top: 20px;
     right: 20px;
-    color: white;
+    color: rgb(196, 193, 198);
     cursor: pointer;
     transition: background-color 0.3s;
 }
@@ -324,9 +325,10 @@
 
 /* Cast Section */
 
-.content-template__cast-section {
+.content-template__cast-section,
+.content-template__episode-section {
     height: fit-content;
-    padding-block: 50px;
+    margin-bottom: 75px;
     color: rgb(196, 193, 198);
 }
 
@@ -336,13 +338,16 @@
     overflow: hidden;
 }
 
-.content-template__cast-title {
+.content-template__cast-title,
+.content-template__episode-title {
     font-size: 2.2rem;
     font-weight: 500;
     font-family: 'Montserrat', sans-serif;
+    color: rgb(196, 193, 198);
 }
 
-.content-template__cast-count {
+.content-template__cast-count,
+.content-template__episode-count {
     height: 40px;
     padding: 0 12px;
     border-radius: 50px;
@@ -352,14 +357,16 @@
     font-weight: 600;
 }
 
-.content-template__cast-icon {
+.content-template__cast-icon,
+.content-template__episode-icon {
     display: inline;
     height: 35px;
     aspect-ratio: 1;
     fill: rgb(196, 193, 198);
 }
 
-.content-template__cast-header {
+.content-template__cast-header,
+.content-template__episode-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -504,8 +511,224 @@
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: center;
+    margin-bottom: 50;
 }
 
 .cast-member .cast-character-name {
     color: rgba(196, 193, 198, 0.6);
+}
+
+/* Episode Guide Section */
+
+.episode-guide {
+    font-family: Arial, sans-serif;
+    color: rgb(196, 193, 198);
+    width: 100%;
+    margin: 0 auto;
+}
+
+.season-dropdown {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.season-dropdown-toggle {
+    background: #f0f0f0;
+    color: #222;
+    padding: 8px 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.season-dropdown-toggle .arrow {
+    margin-left: 8px;
+    font-size: 12px;
+}
+
+.season-dropdown-options {
+    position: absolute;
+    left: 0;
+    right: 0;
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    border-top: none;
+    z-index: 1000;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.season-option {
+    padding: 8px 12px;
+    font-size: 16px;
+    color: #222;
+    cursor: pointer;
+}
+.season-option:hover {
+    background: #e0e0e0;
+}
+
+.episode-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.episode-item {
+    border-top: 1px solid rgba(196, 193, 198, 0.6);
+    padding: 12px 0;
+}
+
+.episode-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.episode-title {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.toggle-icon {
+    margin-left: 10px;
+    font-size: 14px;
+    color: #555;
+}
+
+.episode-overview {
+    margin: 10px 0 0 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgb(196, 193, 198);
+}
+
+.episode-guide-container {
+    transition: height 0.4s ease;
+    overflow: hidden;
+}
+
+.episode-guide-container.transitioning {
+    will-change: height;
+}
+
+.episode-overview-wrapper {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition:
+        max-height 0.4s ease,
+        opacity 0.3s ease;
+}
+
+.episode-overview-wrapper.open {
+    max-height: 500px;
+    opacity: 1;
+}
+
+.episode-overview {
+    font-size: 1rem;
+    color: rgb(196, 193, 198);
+    line-height: 1.6;
+    padding-top: 10px;
+}
+
+.loading {
+    font-size: 16px;
+    padding: 20px 0;
+}
+
+/* Season dropdown button */
+
+.season-dropdown {
+    position: relative;
+    display: inline-block;
+    z-index: 20;
+}
+
+.season-dropdown-toggle {
+    background: rgba(107, 101, 112, 0.7);
+    color: rgb(196, 193, 198);
+    padding: 10px 14px;
+    font-size: 1rem;
+    border-radius: 50px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 160px;
+    transition: background-color 0.2s ease;
+}
+
+.season-dropdown-toggle:hover {
+    background: rgba(107, 101, 112, 0.5);
+}
+
+.season-dropdown-toggle .arrow {
+    font-size: 0.8rem;
+    margin-left: 10px;
+    color: rgb(196, 193, 198);
+}
+
+.season-dropdown-options {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    width: 100%;
+    max-height: 260px;
+    overflow-y: auto;
+    background-color: rgba(35, 33, 39, 0.98);
+    border-radius: 12px;
+    padding: 6px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+    transition: all 0.25s ease;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+}
+
+.season-dropdown-options::-webkit-scrollbar {
+    width: 6px;
+}
+.season-dropdown-options::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+.dropdown-visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.dropdown-hidden {
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+}
+
+.season-option {
+    padding: 10px 18px;
+    font-size: 1rem;
+    font-family: 'Montserrat', sans-serif;
+    color: rgb(196, 193, 198);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.season-option:hover,
+.season-option.focused {
+    background-color: rgba(175, 187, 242, 0.12);
 }

@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Loading from '../components/app/Loading';
 import MediaExpandable from '../components/contentPage/MediaExpandable';
@@ -9,47 +10,28 @@ import MediaRating from '../components/contentPage/MediaRating';
 import MediaPoster from '../components/contentPage/MediaPoster';
 import CastItem from '../components/contentPage/cast/CastItem';
 import HorizontalCarousel from '../components/app/HorizontalCarousel';
-import Tooltip from '../components/app/Tooltip';
+import EpisodeGuide from '../components/showsPage/EpisodeGuide';
+import SeasonSelector from '../components/showsPage/SeasonSelector';
 import sprite from '../styles/sprite.svg';
+
 import { ReactSVG } from 'react-svg';
 
 const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
+    const [selectedSeason, setSelectedSeason] = useState(null);
+    const [episodeCount, setEpisodeCount] = useState(0);
+
+    useEffect(() => {
+        if (media?.seasons?.length > 0) {
+            const firstNormalSeason = media.seasons.find((s) => s.season_number > 0);
+            if (firstNormalSeason) {
+                setSelectedSeason(firstNormalSeason.season_number);
+            }
+        }
+    }, [media]);
+
     const isMovie = type === 'Movie';
+
     const mediaTitle = isMovie ? media.title : media.name;
-
-    const parsedFirstAirDate = new Date(media.first_air_date);
-    const tooltipFirstAirDate = [
-        parsedFirstAirDate.getDate(),
-        parsedFirstAirDate.getMonth() + 1,
-        parsedFirstAirDate.getFullYear()
-    ].join('/');
-    const firstAirYear = parsedFirstAirDate.getFullYear();
-
-    const parsedLastAirDate = new Date(media.last_air_date);
-    const tooltipLastAirDate = [
-        parsedLastAirDate.getDate(),
-        parsedLastAirDate.getMonth() + 1,
-        parsedLastAirDate.getFullYear()
-    ].join('/');
-    const lastAirYear = parsedLastAirDate.getFullYear();
-
-    const showFormattedDate = !isMovie ? (
-        media.in_production ? (
-            <Tooltip content={tooltipFirstAirDate}>
-                <span>Since {firstAirYear}</span>
-            </Tooltip>
-        ) : (
-            <>
-                <Tooltip content={tooltipFirstAirDate}>
-                    <span>{firstAirYear}</span>
-                </Tooltip>
-                {' - '}
-                <Tooltip content={tooltipLastAirDate}>
-                    <span>{lastAirYear}</span>
-                </Tooltip>
-            </>
-        )
-    ) : null;
 
     if (!media || !genresMap) return <Loading />;
 
@@ -156,6 +138,33 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
                             renderItem={(member) => <CastItem member={member} />}
                             scrollStep={300}
                             scrollKey={`cast-scroll-${media.id}`}
+                        />
+                    </div>
+                )}
+
+                {!isMovie && media.seasons?.length > 0 && (
+                    <div className="content-template__episode-section">
+                        <div className="content-template__episode-header">
+                            <p className="content-template__episode-title">
+                                Episode Guide
+                                <DynamicButton className="content-template__episode-count">
+                                    {episodeCount}
+                                </DynamicButton>
+                                <svg className="content-template__episode-icon">
+                                    <use xlinkHref={`${sprite}#arrow-forward`} />
+                                </svg>
+                            </p>
+                            <SeasonSelector
+                                seasons={media.seasons}
+                                selectedSeason={selectedSeason}
+                                onChange={setSelectedSeason}
+                            />
+                        </div>
+
+                        <EpisodeGuide
+                            showId={media.id}
+                            selectedSeason={selectedSeason}
+                            onEpisodeCountChange={setEpisodeCount}
                         />
                     </div>
                 )}
