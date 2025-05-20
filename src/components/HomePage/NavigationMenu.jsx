@@ -39,7 +39,7 @@ export default function NavigationMenu() {
                 <div className="indicator-line">
                     <div
                         className="indicator"
-                        style={{ top: `${selectedIndex * 47.5}px` }}
+                        style={{ top: `${selectedIndex * 48}px` }}
                     ></div>
                 </div>
                 {[

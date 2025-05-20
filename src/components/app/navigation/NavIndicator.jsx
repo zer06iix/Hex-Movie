@@ -1,30 +1,42 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/prop-types */
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useNavStore from '../../../stores/navStore';
 
-export default function NavIndicator({ width }) {
+export default function NavIndicator() {
     const { activeTab, activeTabIndex: i, tabWidths } = useNavStore();
-
-    useEffect(() => {
-        // This will trigger a re-render when activeTab changes
-    }, [activeTab]);
-
-    if (activeTab === null) return null;
 
     const indicatorOffset = -20;
     const tabWidth = tabWidths[i] || 0;
     const tabWidthOffset = tabWidths.slice(0, i).reduce((acc, width) => acc + width, 0);
 
+    // Save only i and offset, not width
+    const [lastPosition, setLastPosition] = useState({
+        i: 0,
+        tabWidthOffset: 0
+    });
+
+    useEffect(() => {
+        if (activeTab !== null) {
+            setLastPosition({
+                i,
+                tabWidthOffset
+            });
+        }
+    }, [activeTab, i, tabWidthOffset]);
+
+    const currentI = activeTab === null ? lastPosition.i : i;
+    const currentOffset =
+        activeTab === null ? lastPosition.tabWidthOffset : tabWidthOffset;
+
     return (
         <div
             className="nav-indicator"
             style={{
-                width: tabWidth + indicatorOffset * 2,
+                width: tabWidth + indicatorOffset * 2, // stay live
                 transform: `translate(
-                calc(${i} * 30px + ${tabWidthOffset}px + ${-indicatorOffset}px),
-                calc(-50% - 50px)
-                )`
+                    calc(${currentI} * 30px + ${currentOffset}px + ${-indicatorOffset}px),
+                    ${activeTab === null ? 'calc(-50% - 65px)' : 'calc(-50% - 50px)'}
+                )`,
+                transition: 'transform 0.3s ease, width 0.3s ease'
             }}
         ></div>
     );
