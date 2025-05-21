@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import PropTypes from 'prop-types';
 import Loading from '../components/app/Loading';
 import MediaExpandable from '../components/contentPage/MediaExpandable';
@@ -12,13 +13,25 @@ import CastItem from '../components/contentPage/cast/CastItem';
 import HorizontalCarousel from '../components/app/HorizontalCarousel';
 import EpisodeGuide from '../components/showsPage/EpisodeGuide';
 import SeasonSelector from '../components/showsPage/SeasonSelector';
+
+import useFetchStore from '../stores/fetchStore';
+
 import sprite from '../styles/sprite.svg';
 
 import { ReactSVG } from 'react-svg';
 
 const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
+    const { fetchRecommendations } = useFetchStore();
     const [selectedSeason, setSelectedSeason] = useState(null);
     const [episodeCount, setEpisodeCount] = useState(0);
+
+    const isMovie = type === 'Movie';
+
+    const { data: recommendations, isLoading, error } = useQuery({
+        queryKey: ['recommendations', media.id],
+        queryFn: () => fetchRecommendations(media.id, isMovie)
+    })
+    
 
     useEffect(() => {
         if (media?.seasons?.length > 0) {
@@ -29,7 +42,6 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
         }
     }, [media]);
 
-    const isMovie = type === 'Movie';
 
     const mediaTitle = isMovie ? media.title : media.name;
 
@@ -168,6 +180,15 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
                         />
                     </div>
                 )}
+
+                {!isLoading && !error && recommendations?.results?.length > 0 ? (
+                    <div className="recommendations-section">
+                        <h3>Recommended {isMovie ? 'Movies' : 'Shows'}</h3>
+                        <h3>{recommendations}</h3>
+                    </div>
+                    ) : (
+                    <p>No recommendations found.</p>
+                )}
             </div>
 
             <ReactSVG src={sprite} style={{ display: 'none' }} />
@@ -176,7 +197,7 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
 };
 
 ContentTemplate.propTypes = {
-    type: PropTypes.oneOf(['Movie', 'Show']).isRequired,
+    type: PropTypes.oneOf(['Movie', 'Shows']).isRequired,
     media: PropTypes.shape({
         id: PropTypes.number.isRequired,
         title: PropTypes.string,
