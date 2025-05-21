@@ -151,11 +151,18 @@ const useFetchStore = create((set) => ({
         return response.data.results;
     },
 
-    fetchMovieRecommendations: async (id) => {
-        const url = createApiUrl(`/movie/${id}/recommendations`);
-        const response = await axios.get(url);
-
-        return response.data;
+    fetchRecommendations: async (id, isMovie) => {
+        try {
+            const endpoint = isMovie 
+                ? `/movie/${id}/recommendations` 
+                : `/tv/${id}/recommendations`;
+            const url = createApiUrl(endpoint);
+            const response = await axios.get(url);
+            return response.data.results; // Returns { results: [...] }
+        } catch (error) {
+            console.error('Failed to fetch recommendations:', error);
+            return { results: [] }; // Fallback to empty array
+        }
     },
 
     fetchEpisodes: async (id, season) => {
