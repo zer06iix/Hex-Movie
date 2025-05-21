@@ -156,6 +156,13 @@ const useFetchStore = create((set) => ({
         const response = await axios.get(url);
 
         return response.data;
+    },
+
+    fetchEpisodes: async (id, season) => {
+        const url = createApiUrl(`/tv/${id}/season/${season}`);
+        const response = await axios.get(url);
+
+        return response.data.episodes;
     }
 }));
 

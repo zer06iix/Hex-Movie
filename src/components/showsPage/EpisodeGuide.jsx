@@ -1,74 +1,74 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { API_KEY, BASE_URL } from '../../api/tmdb';
+import { useQuery } from '@tanstack/react-query';
+import useFetchStore from '../../stores/fetchStore';
 
 const EpisodeGuide = ({ showId, selectedSeason, onEpisodeCountChange }) => {
-    const [episodes, setEpisodes] = useState([]);
     const [expandedEpisode, setExpandedEpisode] = useState(null);
-
     const containerRef = useRef(null);
     const contentRef = useRef(null);
-
     const [heightTransition, setHeightTransition] = useState(false);
+    const { fetchEpisodes } = useFetchStore();
 
+    const { data: episodes = [], isLoading, isError } = useQuery({
+        queryKey: ['episodes', showId, selectedSeason],
+        queryFn: () => fetchEpisodes(showId, selectedSeason),
+        enabled: !!showId && !!selectedSeason,
+    });
+
+    // Handle episode count changes
     useEffect(() => {
-        if (!showId || !selectedSeason) return;
+        if (!onEpisodeCountChange) return;
+        
+        // Call with 0 when there's an error or no episodes
+        if (isError || !episodes.length) {
+            onEpisodeCountChange(0);
+            return;
+        }
 
-        const fetchEpisodes = async () => {
-            // Measure current height before load
-            const currentHeight = containerRef.current?.offsetHeight;
-            if (currentHeight) {
-                containerRef.current.style.height = `${currentHeight}px`;
+        // Call with actual count when we have episodes
+        onEpisodeCountChange(episodes.length);
+    }, [episodes, isError, onEpisodeCountChange]);
+
+    // Handle height transitions when episodes change
+    useEffect(() => {
+        if (!episodes.length) {
+            containerRef.current?.style?.height && (containerRef.current.style.height = '');
+            return;
+        }
+
+        const currentHeight = containerRef.current?.offsetHeight;
+        if (currentHeight) {
+            containerRef.current.style.height = `${currentHeight}px`;
+        }
+
+        requestAnimationFrame(() => {
+            const newHeight = contentRef.current?.offsetHeight;
+            if (newHeight) {
+                containerRef.current.style.height = `${newHeight}px`;
+                setHeightTransition(true);
             }
 
-            setHeightTransition(false);
-
-            try {
-                const response = await fetch(
-                    `${BASE_URL}/tv/${showId}/season/${selectedSeason}?api_key=${API_KEY}`
-                );
-                const data = await response.json();
-                const fetchedEpisodes = data.episodes || [];
-                setEpisodes(fetchedEpisodes);
-                setExpandedEpisode(null);
-
-                if (onEpisodeCountChange) {
-                    onEpisodeCountChange(fetchedEpisodes.length);
+            setTimeout(() => {
+                if (containerRef.current) {
+                    containerRef.current.style.height = '';
+                    setHeightTransition(false);
                 }
-
-                // Wait for next paint to allow content to be set
-                requestAnimationFrame(() => {
-                    const newHeight = contentRef.current?.offsetHeight;
-                    if (newHeight) {
-                        containerRef.current.style.height = `${newHeight}px`;
-                        setHeightTransition(true);
-                    }
-
-                    // After transition ends, clear the explicit height
-                    setTimeout(() => {
-                        if (containerRef.current) {
-                            containerRef.current.style.height = '';
-                            setHeightTransition(false);
-                        }
-                    }, 400); // matches CSS transition duration
-                });
-            } catch (error) {
-                console.error('Failed to fetch episodes:', error);
-                setEpisodes([]);
-                setExpandedEpisode(null);
-                if (onEpisodeCountChange) {
-                    onEpisodeCountChange(0);
-                }
-                containerRef.current.style.height = '';
-            }
-        };
-
-        fetchEpisodes();
-    }, [showId, selectedSeason, onEpisodeCountChange]);
+            }, 400);
+        });
+    }, [episodes]);
 
     const toggleEpisode = (episodeNumber) => {
         setExpandedEpisode((prev) => (prev === episodeNumber ? null : episodeNumber));
     };
+
+    if (isLoading) {
+        return <div className="episode-guide-container">Loading episodes...</div>;
+    }
+
+    if (isError) {
+        return <div className="episode-guide-container">Failed to load episodes.</div>;
+    }
 
     return (
         <div
