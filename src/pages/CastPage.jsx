@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
-import PropTypes from 'prop-types';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import useFetchStore from '../stores/fetchStore';
