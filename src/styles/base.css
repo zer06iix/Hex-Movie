@@ -19,7 +19,7 @@ body {
     height: calc(100vh - 100px);
 
     /* to center including the navbar */
-    transform: translateY(-50px);
+    transform: translateY(100px);
 }
 
 .animate-spin {
