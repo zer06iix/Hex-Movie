@@ -462,6 +462,16 @@
     overflow: hidden;
 }
 
+.cast-member .image-placeholder {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    color: rgba(255, 255, 255, 0.15);
+    fill: rgba(255, 255, 255, 0.15);
+}
+
 .cast-member .cast-image {
     width: 100%;
     height: 100%;
@@ -470,27 +480,13 @@
     color: transparent;
 }
 
-.media-image-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
+.cast-image.image-placeholder > p {
+    font-size: 1rem;
+    color: rgb(65, 68, 73);
 }
 
-.media-image-placeholder .placeholder-icon {
-    width: 50px;
-    aspect-ratio: 1;
-    fill: rgb(196, 193, 198);
-    opacity: 0.35;
-}
-
-.media-image-placeholder .placeholder-text {
-    color: rgb(196, 193, 198);
-    opacity: 0.35;
-    font-size: small;
+.cast-image.image-placeholder > svg {
+    height: 80px;
 }
 
 .cast-member .detail {

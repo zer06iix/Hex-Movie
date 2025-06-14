@@ -27,11 +27,14 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
 
     const isMovie = type === 'Movie';
 
-    const { data: recommendations, isLoading, error } = useQuery({
+    const {
+        data: recommendations,
+        isLoading,
+        error
+    } = useQuery({
         queryKey: ['recommendations', media.id],
         queryFn: () => fetchRecommendations(media.id, isMovie)
-    })
-    
+    });
 
     useEffect(() => {
         if (media?.seasons?.length > 0) {
@@ -41,7 +44,6 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
             }
         }
     }, [media]);
-
 
     const mediaTitle = isMovie ? media.title : media.name;
 
@@ -186,7 +188,7 @@ const ContentTemplate = ({ type, media, creditsData, genresMap }) => {
                         <h3>Recommended {isMovie ? 'Movies' : 'Shows'}</h3>
                         <h3>{recommendations}</h3>
                     </div>
-                    ) : (
+                ) : (
                     <p>No recommendations found.</p>
                 )}
             </div>

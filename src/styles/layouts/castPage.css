@@ -221,14 +221,14 @@
     gap: 5px;
 }
 
-.cast-member-details-page__placeholder-icon {
+.cast-member-details-page__image-placeholder-icon {
     width: 70px;
     aspect-ratio: 1;
     fill: rgb(196, 193, 198);
     opacity: 0.35;
 }
 
-.cast-member-details-page__placeholder-text {
+.cast-member-details-page__image-placeholder-text {
     color: rgb(196, 193, 198);
     opacity: 0.35;
     font-size: 0.9rem;
@@ -241,6 +241,14 @@
     width: 100%;
     height: 170px;
     overflow: hidden;
+}
+
+.filmography.image-placeholder {
+    font-size: 1.08rem;
+}
+
+.filmography.image-placeholder > svg {
+    height: 75px;
 }
 
 .carousel-wrapper {

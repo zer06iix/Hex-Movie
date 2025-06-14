@@ -317,7 +317,6 @@ nav {
     transition: background-color 0.35s ease;
     display: flex;
     gap: 8px;
-    /* overflow: hidden; */
 }
 
 .query-results.active .query-results-items:last-of-type {
@@ -325,25 +324,20 @@ nav {
 }
 
 .query-results.active .query-results-items:hover {
-    background-color: rgba(0, 0, 0, 0.25);
+    background-color: rgba(0, 0, 0, 0.15);
     cursor: pointer;
 }
 
-.query-results-items .poster-container {
+.query-results-item-poster {
     position: relative;
     height: 100%;
     aspect-ratio: 5.5/8;
     border-radius: 12px;
 }
 
-.query-results-items .poster-container .placeholder-icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    fill: rgb(196, 193, 198);
-    width: 45px;
-    aspect-ratio: 1;
+.query-results-item-poster.image-placeholder {
+    width: 60px;
+    background: rgba(32, 35, 42, 0.8);
 }
 
 .query-results-items img {

@@ -1,15 +1,21 @@
 import PropTypes from 'prop-types';
 import sprite from '../../styles/sprite.svg';
+import ImagePlaceholder from '../app/ImagePlaceholder';
 import { useState, useEffect, useRef } from 'react';
 
 const MediaPoster = ({ imagePath, mediaTitle }) => {
     const [showOverlay, setShowOverlay] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [renderModal, setRenderModal] = useState(false);
+    const [imgError, setImgError] = useState(false);
     const posterWrapperRef = useRef(null);
 
+    const handleImageError = () => setImgError(true);
+
     const handleMouseEnter = () => {
-        setShowOverlay(true);
+        if (imagePath && !imgError) {
+            setShowOverlay(true);
+        }
     };
 
     const handleMouseLeave = () => {
@@ -17,7 +23,7 @@ const MediaPoster = ({ imagePath, mediaTitle }) => {
     };
 
     const handlePosterClick = () => {
-        if (imagePath) {
+        if (imagePath && !imgError) {
             setRenderModal(true);
             setTimeout(() => {
                 setIsModalOpen(true);
@@ -46,41 +52,37 @@ const MediaPoster = ({ imagePath, mediaTitle }) => {
 
     const finalImagePath = imagePath
         ? `https://image.tmdb.org/t/p/w500${imagePath}`
-        : 'path_to_placeholder_image'; // Fallback image URL
+        : null;
 
     return (
-        <div className="reusable-poster-container">
-            {finalImagePath ? (
+        <div className="media-poster-container">
+            {finalImagePath && !imgError ? (
                 <div
                     ref={posterWrapperRef}
-                    className="reusable-poster-wrapper"
+                    className="media-poster-wrapper"
                     onClick={handlePosterClick}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                 >
                     <img
-                        className="reusable-poster-image"
+                        className="media-poster-image"
                         src={finalImagePath}
                         alt={mediaTitle}
+                        onError={handleImageError}
                     />
                     <div
-                        className={`reusable-hover-overlay ${showOverlay ? 'visible' : ''}`}
+                        className={`media-hover-overlay ${showOverlay ? 'visible' : ''}`}
                     >
-                        <svg className="reusable-icon">
+                        <svg className="media-hover-overlay-icon">
                             <use xlinkHref={`${sprite}#fullscreen`} />
                         </svg>
                     </div>
                 </div>
             ) : (
-                <div className="reusable-poster-placeholder">
-                    <svg className="reusable-icon">
-                        <use xlinkHref={`${sprite}#image-placeholder`} />
-                    </svg>
-                    <p className="reusable-text">Not available</p>
-                </div>
+                <ImagePlaceholder className="media-poster-placeholder" />
             )}
 
-            {renderModal && (
+            {renderModal && shouldShowImage && (
                 <div
                     className={`reusable-fullscreen-modal ${isModalOpen ? 'active' : ''}`}
                     onClick={handleCloseModal}
@@ -90,6 +92,7 @@ const MediaPoster = ({ imagePath, mediaTitle }) => {
                             className="reusable-modal-image"
                             src={finalImagePath}
                             alt={mediaTitle}
+                            onError={handleImageError}
                         />
                     </div>
                 </div>

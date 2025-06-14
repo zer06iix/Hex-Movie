@@ -1,6 +1,7 @@
 /* ----------------------------------
    Carousel Container & Wrapper
 ---------------------------------- */
+
 .carousel-container {
     display: flex;
     align-items: center;
@@ -65,6 +66,19 @@
     height: 100%;
     object-fit: cover;
     pointer-events: auto;
+}
+
+.carousel-images-main {
+    position: absolute;
+    top: 0;
+    left: 0;
+    aspect-ratio: 5.5 / 8;
+    width: 100;
+}
+
+.carousel-images-upnext > svg {
+    height: 100%;
+    width: 100%;
 }
 
 /* Carousel Detail Box (Fixed Overlay) */

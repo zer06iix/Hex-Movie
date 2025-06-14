@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import sprite from '../../../styles/sprite.svg';
+import ImagePlaceholder from '../../app/ImagePlaceholder';
 
 export default function CastImage({ member }) {
     const [imgError, setImgError] = useState(false);
@@ -23,12 +23,7 @@ export default function CastImage({ member }) {
                     onError={handleImageError}
                 />
             ) : (
-                <div className="cast-image-placeholder">
-                    <svg className="placeholder-icon">
-                        <use xlinkHref={`${sprite}#image-placeholder`} />
-                    </svg>
-                    <p className="placeholder-text">Not available</p>
-                </div>
+                <ImagePlaceholder className="cast-image" false />
             )}
         </>
     );

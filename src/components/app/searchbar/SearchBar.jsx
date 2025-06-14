@@ -6,7 +6,7 @@ import { normalize, compareTwoStrings } from 'string-similarity';
 import SearchButton from '../../buttons/SearchButton';
 import SearchInput from './SearchInput';
 import Loading from '../Loading';
-import sprite from '../../../styles/sprite.svg';
+import ImagePlaceholder from '../../app/ImagePlaceholder';
 import useFetchStore from '../../../stores/fetchStore';
 import useNavStore from '../../../stores/navStore';
 
@@ -21,6 +21,9 @@ export default function SearchBar() {
 
     const searchBarRef = useRef(null);
     const [isSearchBarOpen, setIsSearchBarOpen] = useState(false);
+    const [imgError, setImgError] = useState(false);
+
+    const handleImageError = () => setImgError(true);
 
     // Query cleanup and typo correction (simple)
     function rewriteQuery(raw) {
@@ -231,19 +234,20 @@ export default function SearchBar() {
                                   className="query-results-items"
                                   key={media.id}
                               >
-                                  <div className="poster-container">
-                                      {imageUrl ? (
-                                          <div className="poster-container">
-                                              <img src={imageUrl} alt={title} />
+                                  <div className="query-results-item-poster">
+                                      {imageUrl && !imgError ? (
+                                          <div className="query-results-item-poster">
+                                              <img
+                                                  src={imageUrl}
+                                                  alt={title}
+                                                  onError={handleImageError}
+                                              />
                                           </div>
                                       ) : (
-                                          <div className="poster-container">
-                                              <svg className="placeholder-icon">
-                                                  <use
-                                                      xlinkHref={`${sprite}#image-placeholder`}
-                                                  />
-                                              </svg>
-                                          </div>
+                                          <ImagePlaceholder
+                                              className="query-results-item-poster"
+                                              false
+                                          />
                                       )}
                                   </div>
                                   <div className="right-section">

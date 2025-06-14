@@ -1,8 +1,9 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import 'react-lazy-load-image-component/src/effects/blur.css';
 import sprite from '../../../styles/sprite.svg';
+import ImagePlaceholder from '../../app/ImagePlaceholder';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 export default function MediaImage({ media }) {
     const [imgError, setImgError] = useState(false);
@@ -15,14 +16,7 @@ export default function MediaImage({ media }) {
     };
 
     if (imgError || !imageUrl) {
-        return (
-            <div className="media-image-placeholder">
-                <svg className="placeholder-icon">
-                    <use xlinkHref={`${sprite}#image-placeholder`} />
-                </svg>
-                <p className="placeholder-text">Not available</p>
-            </div>
-        );
+        return <ImagePlaceholder className="filmography" />;
     }
 
     return (
