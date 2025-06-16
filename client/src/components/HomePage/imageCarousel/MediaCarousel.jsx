@@ -10,7 +10,7 @@ import NextSlide from './NextSlide';
 
 import MouseDownDetector from './MouseDownDetector';
 import useCarouselStore from '../../../stores/carouselStore';
-import VoteAverage from '../imageCarousel/VoteAverage';
+import VoteAverage from './VoteAverage';
 
 export default function MediaCarousel({
     media,

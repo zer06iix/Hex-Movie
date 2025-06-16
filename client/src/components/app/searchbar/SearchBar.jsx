@@ -6,7 +6,7 @@ import { normalize, compareTwoStrings } from 'string-similarity';
 import SearchButton from '../../buttons/SearchButton';
 import SearchInput from './SearchInput';
 import Loading from '../Loading';
-import ImagePlaceholder from '../../app/ImagePlaceholder';
+import ImagePlaceholder from '../ImagePlaceholder';
 import useFetchStore from '../../../stores/fetchStore';
 import useNavStore from '../../../stores/navStore';
 

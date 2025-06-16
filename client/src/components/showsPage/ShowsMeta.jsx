@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import sprite from '../../styles/sprite.svg';
 import useShowStore from '../../stores/showStore';
 import { countryNames } from '../../api/countries';
-import Tooltip from '../../components/app/Tooltip';
+import Tooltip from '../app/Tooltip';
 
 const ShowsMeta = ({
     firstAirDate,

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DynamicButton from '../../components/buttons/DynamicButton';
+import DynamicButton from '../buttons/DynamicButton';
 import MediaItem from './media/MediaItem';
 import sprite from '../../styles/sprite.svg';
 import HorizontalCarousel from '../app/HorizontalCarousel';

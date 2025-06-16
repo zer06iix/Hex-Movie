@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import DynamicButton from '../../components/buttons/DynamicButton';
+import DynamicButton from '../buttons/DynamicButton';
 import MetadataDisplay from './MetadataDisplay';
 import BioModal from './BioModal';
 import PropTypes from 'prop-types';
